@@ -390,25 +390,40 @@ function formatDisplay(date, time) {
 
   if (date) {
     // date 格式：yyyy-MM-dd
-    const parts = String(date).split('-');
+    const clean = String(date).trim();
+    const parts = clean.split('-');
     if (parts.length === 3) {
-      dateStr = `${parts[0]} 年 ${parseInt(parts[1])} 月 ${parseInt(parts[2])} 日`;
+      const y = parts[0];
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      if (!isNaN(m) && !isNaN(d)) {
+        dateStr = `${y} 年 ${m} 月 ${d} 日`;
+      } else {
+        dateStr = clean;
+      }
     } else {
-      dateStr = String(date);
+      dateStr = clean;
     }
   }
 
   if (time) {
-    // time 格式：HH:mm
-    const t = String(time).trim();
-    const [h, m] = t.split(':');
-    if (h !== undefined && m !== undefined) {
-      const hour = parseInt(h);
-      const ampm = hour < 12 ? '上午' : '下午';
-      const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-      timeStr = `${ampm} ${hour12}:${m}`;
+    // time 格式：HH:mm（純文字，不是 Date 物件）
+    const clean = String(time).trim();
+    // 取前5字確保格式乾淨（避免多餘字元）
+    const t = clean.length > 5 ? clean.substring(0, 5) : clean;
+    const colonIdx = t.indexOf(':');
+    if (colonIdx > 0) {
+      const hour = parseInt(t.substring(0, colonIdx), 10);
+      const min  = t.substring(colonIdx + 1);
+      if (!isNaN(hour)) {
+        const ampm   = hour < 12 ? '上午' : '下午';
+        const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+        timeStr = `${ampm} ${hour12}:${min}`;
+      } else {
+        timeStr = clean;
+      }
     } else {
-      timeStr = t;
+      timeStr = clean;
     }
   }
 
