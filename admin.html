@@ -240,6 +240,52 @@
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxWwieJD31_Or6FNdH6LHNY07hWepbKBpjvBb4Co3wYtX0QqpieDJoTxKKICMUIHb660w/exec';
 
+// ── 日期時間格式化 ──
+function formatDisplay(date, time) {
+  let dateStr = '';
+  let timeStr = '';
+  if (date) {
+    const parts = String(date).trim().split('-');
+    if (parts.length === 3) {
+      const y = parts[0], m = parseInt(parts[1],10), d = parseInt(parts[2],10);
+      if (!isNaN(m) && !isNaN(d)) dateStr = `${y} 年 ${m} 月 ${d} 日`;
+      else dateStr = String(date).trim();
+    } else { dateStr = String(date).trim(); }
+  }
+  if (time) {
+    const clean = String(time).trim().substring(0,5);
+    const idx   = clean.indexOf(':');
+    if (idx > 0) {
+      const h = parseInt(clean.substring(0,idx),10);
+      const mn = clean.substring(idx+1);
+      if (!isNaN(h)) {
+        timeStr = `${h < 12 ? '上午' : '下午'} ${h===0?12:h>12?h-12:h}:${mn}`;
+      } else { timeStr = clean; }
+    } else { timeStr = clean; }
+  }
+  return [dateStr, timeStr].filter(Boolean).join('　');
+}
+
+// Sheets 的日期有時帶完整 timestamp，取前10字元確保是 yyyy-MM-dd
+function cleanDate(val) {
+  if (!val) return '';
+  const s = String(val).trim();
+  // 如果是 yyyy-MM-dd 格式直接回傳
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  // 如果包含空格（datetime 格式），取前10
+  if (s.includes(' ')) return s.substring(0,10);
+  return s;
+}
+
+// 時間確保是 HH:mm（input[type=time] 要求）
+function cleanTime(val) {
+  if (!val) return '';
+  const s = String(val).trim();
+  if (/^\d{2}:\d{2}$/.test(s)) return s;
+  if (s.includes(':')) return s.substring(0,5);
+  return s;
+}
+
 // ── 密碼 (只有這個留在 localStorage) ──
 function getPassword() { return localStorage.getItem('adminPw') || '12345678'; }
 
@@ -344,7 +390,7 @@ function renderEvents() {
 
   document.getElementById('eventsList').innerHTML = cachedEvents.map(ev=>{
     const isActive = ev.active==='上架';
-    const meta = [ev.date, ev.time].filter(Boolean).join(' ');
+    const meta = formatDisplay(cleanDate(ev.date), cleanTime(ev.time));
     return `<div class="event-card">
       <div class="event-header ${openEventId===ev.id?'open':''}" onclick="toggleEvent('${ev.id}')">
         <div class="status-dot ${isActive?'active':'inactive'}"></div>
@@ -397,8 +443,8 @@ function renderEventBody(ev) {
     </div>
     <div class="field"><label>活動名稱</label><input type="text" id="editTitle-${ev.id}" value="${escHtml(ev.title||'')}"></div>
     <div class="field-row">
-      <div class="field"><label>活動日期</label><input type="date" id="editDate-${ev.id}" value="${ev.date||''}"></div>
-      <div class="field"><label>活動時間</label><input type="time" id="editTime-${ev.id}" value="${ev.time||''}"></div>
+      <div class="field"><label>活動日期</label><input type="date" id="editDate-${ev.id}" value="${cleanDate(ev.date)}"></div>
+      <div class="field"><label>活動時間</label><input type="time" id="editTime-${ev.id}" value="${cleanTime(ev.time)}"></div>
     </div>
     <div class="field"><label>Zoom 連結</label><input type="text" id="editZoom-${ev.id}" value="${escHtml(ev.zoomLink||'')}"></div>
     <div class="field"><label>活動介紹</label><textarea id="editDesc-${ev.id}">${escHtml(ev.description||'')}</textarea></div>
