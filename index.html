@@ -383,50 +383,27 @@ let currentEvent = null;
 let selectedId   = '';
 let cachedEvents = [];
 
-// ── 日期時間格式化（給來賓看的易讀格式）──
+// ── 日期時間格式化（Apps Script 已確保 yyyy-MM-dd 和 HH:mm）──
 function formatDisplay(date, time) {
   let dateStr = '';
   let timeStr = '';
-
   if (date) {
-    // date 格式：yyyy-MM-dd
-    const clean = String(date).trim();
-    const parts = clean.split('-');
+    const parts = String(date).trim().split('-');
     if (parts.length === 3) {
-      const y = parts[0];
       const m = parseInt(parts[1], 10);
       const d = parseInt(parts[2], 10);
-      if (!isNaN(m) && !isNaN(d)) {
-        dateStr = `${y} 年 ${m} 月 ${d} 日`;
-      } else {
-        dateStr = clean;
-      }
-    } else {
-      dateStr = clean;
+      dateStr = `${parts[0]} 年 ${m} 月 ${d} 日`;
     }
   }
-
   if (time) {
-    // time 格式：HH:mm（純文字，不是 Date 物件）
-    const clean = String(time).trim();
-    // 取前5字確保格式乾淨（避免多餘字元）
-    const t = clean.length > 5 ? clean.substring(0, 5) : clean;
-    const colonIdx = t.indexOf(':');
-    if (colonIdx > 0) {
-      const hour = parseInt(t.substring(0, colonIdx), 10);
-      const min  = t.substring(colonIdx + 1);
-      if (!isNaN(hour)) {
-        const ampm   = hour < 12 ? '上午' : '下午';
-        const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-        timeStr = `${ampm} ${hour12}:${min}`;
-      } else {
-        timeStr = clean;
-      }
-    } else {
-      timeStr = clean;
+    const t = String(time).trim().substring(0, 5);
+    const col = t.indexOf(':');
+    if (col > 0) {
+      const h  = parseInt(t.substring(0, col), 10);
+      const mn = t.substring(col + 1);
+      timeStr = `${h < 12 ? '上午' : '下午'} ${h === 0 ? 12 : h > 12 ? h - 12 : h}:${mn}`;
     }
   }
-
   return [dateStr, timeStr].filter(Boolean).join('　');
 }
 
