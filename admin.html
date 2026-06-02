@@ -240,51 +240,35 @@
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxWwieJD31_Or6FNdH6LHNY07hWepbKBpjvBb4Co3wYtX0QqpieDJoTxKKICMUIHb660w/exec';
 
-// ── 日期時間格式化 ──
+// ── 日期時間格式化（Apps Script 已確保 yyyy-MM-dd 和 HH:mm）──
 function formatDisplay(date, time) {
   let dateStr = '';
   let timeStr = '';
   if (date) {
     const parts = String(date).trim().split('-');
     if (parts.length === 3) {
-      const y = parts[0], m = parseInt(parts[1],10), d = parseInt(parts[2],10);
-      if (!isNaN(m) && !isNaN(d)) dateStr = `${y} 年 ${m} 月 ${d} 日`;
-      else dateStr = String(date).trim();
-    } else { dateStr = String(date).trim(); }
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      dateStr = `${parts[0]} 年 ${m} 月 ${d} 日`;
+    }
   }
   if (time) {
-    const clean = String(time).trim().substring(0,5);
-    const idx   = clean.indexOf(':');
-    if (idx > 0) {
-      const h = parseInt(clean.substring(0,idx),10);
-      const mn = clean.substring(idx+1);
-      if (!isNaN(h)) {
-        timeStr = `${h < 12 ? '上午' : '下午'} ${h===0?12:h>12?h-12:h}:${mn}`;
-      } else { timeStr = clean; }
-    } else { timeStr = clean; }
+    const t = String(time).trim().substring(0, 5);
+    const col = t.indexOf(':');
+    if (col > 0) {
+      const h  = parseInt(t.substring(0, col), 10);
+      const mn = t.substring(col + 1);
+      timeStr = `${h < 12 ? '上午' : '下午'} ${h === 0 ? 12 : h > 12 ? h - 12 : h}:${mn}`;
+    }
   }
   return [dateStr, timeStr].filter(Boolean).join('　');
 }
 
-// Sheets 的日期有時帶完整 timestamp，取前10字元確保是 yyyy-MM-dd
-function cleanDate(val) {
-  if (!val) return '';
-  const s = String(val).trim();
-  // 如果是 yyyy-MM-dd 格式直接回傳
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  // 如果包含空格（datetime 格式），取前10
-  if (s.includes(' ')) return s.substring(0,10);
-  return s;
-}
+// input[type=date] 需要 yyyy-MM-dd，input[type=time] 需要 HH:mm
+// Apps Script 已確保格式，直接回傳即可
+function cleanDate(val) { return val ? String(val).trim().substring(0, 10) : ''; }
+function cleanTime(val) { return val ? String(val).trim().substring(0, 5) : ''; }
 
-// 時間確保是 HH:mm（input[type=time] 要求）
-function cleanTime(val) {
-  if (!val) return '';
-  const s = String(val).trim();
-  if (/^\d{2}:\d{2}$/.test(s)) return s;
-  if (s.includes(':')) return s.substring(0,5);
-  return s;
-}
 
 // ── 密碼 (只有這個留在 localStorage) ──
 function getPassword() { return localStorage.getItem('adminPw') || '12345678'; }
