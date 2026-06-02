@@ -436,6 +436,18 @@ function saveEvent(id) {
   events[idx].zoomLink    = document.getElementById(`editZoom-${id}`).value;
   events[idx].description = document.getElementById(`editDesc-${id}`).value;
   saveEvents(events);
+
+  postToSheets({
+    sheet:       '活動列表',
+    eventId:     String(events[idx].id),
+    title:       events[idx].title,
+    date:        events[idx].date,
+    time:        events[idx].time,
+    zoomLink:    events[idx].zoomLink,
+    description: events[idx].description,
+    updatedAt:   new Date().toLocaleString('zh-TW')
+  });
+
   openEventId = id;
   renderEvents();
   showToast('✓ 已儲存');
