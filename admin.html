@@ -234,8 +234,8 @@
 </div>
 
 <!-- New Event Modal -->
-<div id="newModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeNewModal()">
-  <div class="modal-box">
+<div id="newModal" class="modal-overlay" style="display:none;" onclick="closeNewModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
     <h2 class="modal-title">新增活動</h2>
     <div class="field"><label>活動名稱</label><input type="text" id="newTitle" placeholder="例：2026.06.10 週二健管師線上課程"></div>
     <div class="field-row">
@@ -255,6 +255,17 @@
 <div class="save-toast" id="toast"></div>
 
 <script>
+// ── Google Sheets ──
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxWwieJD31_Or6FNdH6LHNY07hWepbKBpjvBb4Co3wYtX0QqpieDJoTxKKICMUIHb660w/exec';
+
+function postToSheets(payload) {
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
 // ── Auth ──
 function getPassword() { return localStorage.getItem('adminPw') || '12345678'; }
 
@@ -478,6 +489,14 @@ function createEvent() {
     const el = document.getElementById(id);
     el.value = '';
     el.style.borderColor = '';
+  });
+
+  // 寫入 Google Sheets（活動列表工作表）
+  postToSheets({
+    sheet: '活動列表',
+    eventId: String(newId),
+    title, date, time, zoomLink: zoom, description: desc,
+    createdAt: new Date().toLocaleString('zh-TW')
   });
 
   openEventId = newId;
