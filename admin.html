@@ -246,7 +246,7 @@
     <div class="field"><label>活動介紹文字</label><textarea id="newDesc" placeholder="請輸入本次活動說明，會顯示在來賓入口頁面..."></textarea></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeNewModal()">取消</button>
-      <button class="btn btn-primary" id="createBtn" onclick="createEvent()">建立活動</button>
+      <button class="btn btn-primary" id="createBtn" onclick="createNewEvent()">建立活動</button>
     </div>
   </div>
 </div>
@@ -465,7 +465,7 @@ function openNewModal() {
 
 function closeNewModal() { document.getElementById('newModal').style.display = 'none'; }
 
-function createEvent() {
+function createNewEvent() {
   const title = document.getElementById('newTitle').value.trim();
   const date  = document.getElementById('newDate').value;
   const time  = document.getElementById('newTime').value;
