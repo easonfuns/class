@@ -8,242 +8,52 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1c1c1e;
-    --ink-soft: #48484a;
-    --ink-muted: #8e8e93;
-    --paper: #faf9f7;
-    --paper-warm: #f2efe9;
-    --paper-dark: #e8e4dc;
-    --accent: #3d5a3e;
-    --accent-light: #e8f0e8;
-    --accent-mid: #6b9e6c;
-    --danger: #c0392b;
-    --danger-light: #fdf2f2;
-    --line: rgba(0,0,0,0.1);
-    --radius: 4px;
-    --radius-lg: 12px;
-    --sidebar: 220px;
+    --ink: #1c1c1e; --ink-soft: #48484a; --ink-muted: #8e8e93;
+    --paper: #faf9f7; --paper-warm: #f2efe9; --paper-dark: #e8e4dc;
+    --accent: #3d5a3e; --accent-light: #e8f0e8; --accent-mid: #6b9e6c;
+    --danger: #c0392b; --danger-light: #fdf2f2;
+    --line: rgba(0,0,0,0.1); --radius: 4px; --radius-lg: 12px; --sidebar: 220px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper-warm); color: var(--ink); min-height: 100vh; }
 
-  body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background: var(--paper-warm);
-    color: var(--ink);
-    min-height: 100vh;
-  }
-
-  /* ── Login ── */
-  .login-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--paper);
-  }
-
-  .login-box {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: 48px 40px;
-    width: 360px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-  }
-
-  .login-title {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .login-sub {
-    font-size: 13px;
-    color: var(--ink-muted);
-    margin-bottom: 28px;
-  }
-
-  .login-field {
-    margin-bottom: 16px;
-  }
-
-  .login-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 6px;
-  }
-
-  .login-field input {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 15px;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-
-  .login-field input:focus {
-    border-color: var(--accent-mid);
-    box-shadow: 0 0 0 3px rgba(107,158,108,0.15);
-  }
-
-  .login-btn {
-    width: 100%;
-    padding: 13px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius);
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: background 0.15s;
-  }
-
+  /* Login */
+  .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--paper); }
+  .login-box { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 48px 40px; width: 360px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .login-title { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .login-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 28px; }
+  .login-field { margin-bottom: 16px; }
+  .login-field label { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+  .login-field input { width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  .login-field input:focus { border-color: var(--accent-mid); box-shadow: 0 0 0 3px rgba(107,158,108,0.15); }
+  .login-btn { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
   .login-btn:hover { background: #2e4530; }
+  .login-error { font-size: 13px; color: var(--danger); margin-top: 10px; text-align: center; }
 
-  .login-error {
-    font-size: 13px;
-    color: var(--danger);
-    margin-top: 10px;
-    text-align: center;
-  }
+  /* Layout */
+  .admin-layout { display: grid; grid-template-columns: var(--sidebar) 1fr; min-height: 100vh; }
 
-  /* ── Admin layout ── */
-  .admin-layout {
-    display: grid;
-    grid-template-columns: var(--sidebar) 1fr;
-    min-height: 100vh;
-  }
-
-  /* ── Sidebar ── */
-  .sidebar {
-    background: #fff;
-    border-right: 1px solid var(--line);
-    padding: 24px 0;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .sidebar-brand {
-    padding: 0 20px 24px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 16px;
-  }
-
-  .sidebar-brand h1 {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.4;
-  }
-
-  .sidebar-brand p {
-    font-size: 11px;
-    color: var(--ink-muted);
-    margin-top: 2px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    font-size: 14px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    transition: background 0.12s, color 0.12s;
-    border-radius: 0;
-  }
-
+  /* Sidebar */
+  .sidebar { background: #fff; border-right: 1px solid var(--line); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+  .sidebar-brand { padding: 0 20px 24px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+  .sidebar-brand h1 { font-family: 'Noto Serif TC', serif; font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .sidebar-brand p { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; color: var(--ink-soft); cursor: pointer; transition: background 0.12s, color 0.12s; }
   .nav-item:hover { background: var(--paper-warm); color: var(--ink); }
-
-  .nav-item.active {
-    background: var(--accent-light);
-    color: var(--accent);
-    font-weight: 500;
-    border-right: 2px solid var(--accent);
-  }
-
-  .nav-item svg { flex-shrink: 0; opacity: 0.7; }
-  .nav-item.active svg { opacity: 1; }
-
-  .sidebar-footer {
-    margin-top: auto;
-    padding: 16px 20px;
-    border-top: 1px solid var(--line);
-  }
-
-  .logout-btn {
-    font-size: 13px;
-    color: var(--ink-muted);
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-    padding: 0;
-  }
-
+  .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 500; border-right: 2px solid var(--accent); }
+  .sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--line); }
+  .logout-btn { font-size: 13px; color: var(--ink-muted); cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
   .logout-btn:hover { color: var(--danger); }
 
-  /* ── Main content ── */
-  .main-content {
-    padding: 32px 36px;
-    max-width: 900px;
-  }
-
+  /* Main */
+  .main-content { padding: 32px 36px; max-width: 900px; }
   .page-section { display: none; }
   .page-section.active { display: block; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .section-title { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; }
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .section-title {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  /* ── Buttons ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 16px;
-    border-radius: var(--radius);
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid var(--line);
-    background: #fff;
-    color: var(--ink);
-    transition: all 0.12s;
-    white-space: nowrap;
-    text-decoration: none;
-  }
-
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink); transition: all 0.12s; white-space: nowrap; text-decoration: none; }
   .btn:hover { background: var(--paper-warm); }
   .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn-primary:hover { background: #2e4530; }
@@ -251,351 +61,81 @@
   .btn-danger:hover { background: #fce8e8; }
   .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-  /* ── Stats row ── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 28px;
-  }
+  /* Stats */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+  .stat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 16px 20px; }
+  .stat-num { font-family: 'Noto Serif TC', serif; font-size: 28px; font-weight: 700; color: var(--ink); }
+  .stat-label { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
 
-  .stat-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: 16px 20px;
-  }
-
-  .stat-num {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--ink-muted);
-    margin-top: 2px;
-  }
-
-  /* ── Event cards ── */
-  .event-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    margin-bottom: 12px;
-    transition: box-shadow 0.15s;
-  }
-
-  .event-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-
-  .event-header {
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid transparent;
-    cursor: pointer;
-    transition: background 0.12s;
-    flex-wrap: wrap;
-  }
-
+  /* Event cards */
+  .event-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 12px; }
+  .event-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid transparent; cursor: pointer; transition: background 0.12s; flex-wrap: wrap; }
   .event-header:hover { background: var(--paper-warm); }
   .event-header.open { border-bottom-color: var(--line); background: var(--paper-warm); }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .status-dot.active { background: #3d7a40; box-shadow: 0 0 0 3px rgba(61,122,64,0.15); }
   .status-dot.inactive { background: var(--ink-muted); }
-
-  .event-title-text {
-    font-size: 15px;
-    font-weight: 500;
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .event-date-text {
-    font-size: 12px;
-    color: var(--ink-muted);
-    flex-shrink: 0;
-  }
-
-  .event-reg-count {
-    font-size: 12px;
-    color: var(--ink-muted);
-    flex-shrink: 0;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-
+  .event-title-text { font-size: 15px; font-weight: 500; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .event-meta-text { font-size: 12px; color: var(--ink-muted); flex-shrink: 0; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; flex-shrink: 0; }
   .badge-active { background: var(--accent-light); color: var(--accent); }
   .badge-inactive { background: var(--paper-dark); color: var(--ink-muted); }
-
-  .event-body {
-    padding: 20px;
-    display: none;
-  }
-
+  .event-body { padding: 20px; display: none; }
   .event-body.open { display: block; }
 
-  /* ── DM upload area ── */
-  .dm-upload-area {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .dm-preview-wrap {
-    flex-shrink: 0;
-  }
-
-  .dm-preview {
-    width: 120px;
-    aspect-ratio: 2/3;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    overflow: hidden;
-    background: var(--paper-warm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: var(--ink-muted);
-    text-align: center;
-  }
-
-  .dm-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .dm-upload-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding-top: 4px;
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .upload-hint {
-    font-size: 12px;
-    color: var(--ink-muted);
-    line-height: 1.6;
-  }
-
+  /* DM upload */
+  .dm-upload-area { display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start; flex-wrap: wrap; }
+  .dm-preview { width: 100px; aspect-ratio: 2/3; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--paper-warm); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--ink-muted); text-align: center; flex-shrink: 0; }
+  .dm-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .dm-upload-controls { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; flex: 1; min-width: 180px; }
   input[type="file"] { display: none; }
+  .upload-hint { font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
+  .upload-progress { font-size: 12px; color: var(--accent); display: none; }
 
-  .upload-progress {
-    font-size: 12px;
-    color: var(--accent);
-    margin-top: 4px;
-    display: none;
-  }
-
-  /* ── Form fields ── */
-  .field {
-    margin-bottom: 16px;
-  }
-
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 6px;
-  }
-
-  .field input, .field textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
-    background: #fff;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-
-  .field input:focus, .field textarea:focus {
-    border-color: var(--accent-mid);
-    box-shadow: 0 0 0 3px rgba(107,158,108,0.12);
-  }
-
+  /* Fields */
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+  .field input, .field textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; color: var(--ink); background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  .field input:focus, .field textarea:focus { border-color: var(--accent-mid); box-shadow: 0 0 0 3px rgba(107,158,108,0.12); }
   .field textarea { resize: vertical; min-height: 80px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .event-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    border-top: 1px solid var(--line);
-    padding-top: 16px;
-  }
-
-  /* ── Registration table ── */
-  .reg-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  .reg-table th {
-    text-align: left;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    padding: 0 0 10px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .reg-table td {
-    padding: 10px 0;
-    border-bottom: 1px solid var(--line);
-    vertical-align: middle;
-  }
-
+  /* Reg table */
+  .reg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .reg-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); padding: 0 0 10px; border-bottom: 1px solid var(--line); }
+  .reg-table td { padding: 10px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
   .reg-table tr:last-child td { border-bottom: none; }
-
-  .id-tag {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-
+  .id-tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
   .id-health { background: var(--accent-light); color: var(--accent); }
   .id-guest  { background: #eeedfe; color: #534AB7; }
   .id-staff  { background: var(--paper-dark); color: var(--ink-soft); }
   .id-npo    { background: #faeeda; color: #633806; }
 
-  /* ── Zoom settings ── */
-  .settings-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    margin-bottom: 16px;
-  }
+  /* Event actions */
+  .event-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 16px; }
 
-  .settings-card h3 {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
+  /* Settings */
+  .settings-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; }
+  .settings-card h3 { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .settings-card p { font-size: 13px; color: var(--ink-muted); margin-bottom: 16px; line-height: 1.6; }
 
-  .settings-card p {
-    font-size: 13px;
-    color: var(--ink-muted);
-    margin-bottom: 16px;
-    line-height: 1.6;
-  }
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
+  .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 32px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 48px rgba(0,0,0,0.15); }
+  .modal-title { font-family: 'Noto Serif TC', serif; font-size: 18px; font-weight: 700; margin-bottom: 24px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
 
-  /* ── New event modal ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    padding: 16px;
-  }
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--ink-muted); font-size: 14px; line-height: 1.7; }
 
-  .modal-box {
-    background: #fff;
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    width: 100%;
-    max-width: 520px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 8px 48px rgba(0,0,0,0.15);
-  }
-
-  .modal-title {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 24px;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-    margin-top: 24px;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--ink-muted);
-    font-size: 14px;
-    line-height: 1.7;
-  }
-
-  /* ── Cloudinary config banner ── */
-  .config-banner {
-    background: #fff8e8;
-    border: 1px solid rgba(186,117,23,0.3);
-    border-radius: var(--radius);
-    padding: 10px 16px;
-    font-size: 13px;
-    color: #633806;
-    margin-bottom: 20px;
-    line-height: 1.6;
-    display: none;
-  }
-
-  .config-banner code {
-    background: rgba(186,117,23,0.1);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-size: 12px;
-  }
+  /* Save toast */
+  .save-toast { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff; padding: 10px 18px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 9999; }
+  .save-toast.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- ── Login screen ── -->
+<!-- Login -->
 <div id="loginScreen" class="login-screen">
   <div class="login-box">
     <h1 class="login-title">管理後台</h1>
@@ -609,111 +149,70 @@
   </div>
 </div>
 
-<!-- ── Admin layout ── -->
+<!-- Admin -->
 <div id="adminLayout" class="admin-layout" style="display:none;">
-
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-brand">
       <h1>週二線上課程</h1>
       <p>管理後台</p>
     </div>
     <div class="nav-item active" onclick="showSection('events')" id="nav-events">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-      </svg>
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       活動列表
     </div>
     <div class="nav-item" onclick="showSection('registrations')" id="nav-registrations">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       報名紀錄
     </div>
     <div class="nav-item" onclick="showSection('settings')" id="nav-settings">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
-      </svg>
-      Zoom 設定
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      系統設定
     </div>
     <div class="sidebar-footer">
       <button class="logout-btn" onclick="doLogout()">← 登出</button>
     </div>
   </div>
 
-  <!-- Main -->
   <div class="main-content">
 
-    <!-- ── Events ── -->
+    <!-- Events -->
     <div id="section-events" class="page-section active">
       <div class="section-header">
         <h2 class="section-title">活動列表</h2>
         <button class="btn btn-primary" onclick="openNewModal()">
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           新增活動
         </button>
       </div>
-
       <div class="stats-row" id="statsRow"></div>
-
-      <div id="configBanner" class="config-banner">
-        ⚠️ 尚未設定 Cloudinary。請至 <strong>Zoom 設定</strong> 頁面填入 <code>Cloud Name</code> 與 <code>Upload Preset</code>，才能上傳 DM 圖片。
-      </div>
-
       <div id="eventsList"></div>
     </div>
 
-    <!-- ── Registrations ── -->
+    <!-- Registrations -->
     <div id="section-registrations" class="page-section">
       <div class="section-header">
         <h2 class="section-title">報名紀錄</h2>
         <button class="btn btn-sm" onclick="exportCSV()">
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           匯出 CSV
         </button>
       </div>
       <div id="regContent"></div>
     </div>
 
-    <!-- ── Settings ── -->
+    <!-- Settings -->
     <div id="section-settings" class="page-section">
-      <div class="section-header">
-        <h2 class="section-title">Zoom 設定</h2>
-      </div>
-
-      <div class="settings-card">
-        <h3>固定 Zoom 房間連結</h3>
-        <p>這個連結會顯示給所有完成登入的來賓，請確認連結正確。</p>
-        <div class="field">
-          <label>Zoom 連結</label>
-          <input type="text" id="zoomInput" placeholder="https://zoom.us/j/...">
-        </div>
-        <button class="btn btn-primary" onclick="saveZoom()">儲存連結</button>
-        <span id="zoomSaved" style="font-size:13px;color:var(--accent);margin-left:10px;display:none;">✓ 已儲存</span>
-      </div>
+      <div class="section-header"><h2 class="section-title">系統設定</h2></div>
 
       <div class="settings-card">
         <h3>Cloudinary 圖片上傳設定</h3>
-        <p>
-          DM 圖片上傳需要免費的 <strong>Cloudinary</strong> 帳號。<br>
-          步驟：<br>
-          1. 前往 <a href="https://cloudinary.com" target="_blank" style="color:var(--accent)">cloudinary.com</a> 免費註冊<br>
-          2. 進入後台 → Settings → Upload → 新增一個 <strong>Unsigned Upload Preset</strong><br>
-          3. 將 Cloud Name 與 Preset Name 填入下方
-        </p>
+        <p>DM 圖片上傳需要免費的 Cloudinary 帳號。<br>
+          步驟：1. 前往 <a href="https://cloudinary.com" target="_blank" style="color:var(--accent)">cloudinary.com</a> 免費註冊<br>
+          2. 進入後台 → Settings → Upload → 新增一個 Unsigned Upload Preset<br>
+          3. 將 Cloud Name 與 Preset Name 填入下方</p>
         <div class="field-row">
-          <div class="field">
-            <label>Cloud Name</label>
-            <input type="text" id="cloudNameInput" placeholder="your-cloud-name">
-          </div>
-          <div class="field">
-            <label>Upload Preset</label>
-            <input type="text" id="presetInput" placeholder="your-preset-name">
-          </div>
+          <div class="field"><label>Cloud Name</label><input type="text" id="cloudNameInput" placeholder="your-cloud-name"></div>
+          <div class="field"><label>Upload Preset</label><input type="text" id="presetInput" placeholder="your-preset-name"></div>
         </div>
         <button class="btn btn-primary" onclick="saveCloudinary()">儲存設定</button>
         <span id="cdnSaved" style="font-size:13px;color:var(--accent);margin-left:10px;display:none;">✓ 已儲存</span>
@@ -721,16 +220,10 @@
 
       <div class="settings-card">
         <h3>變更管理密碼</h3>
-        <p>預設密碼為 <code style="background:var(--paper-dark);padding:1px 6px;border-radius:3px;font-size:13px;">12345678</code>，建議登入後立即更改。</p>
+        <p>預設密碼為 <code style="background:var(--paper-dark);padding:1px 6px;border-radius:3px;font-size:12px;">12345678</code>，建議登入後立即更改。</p>
         <div class="field-row">
-          <div class="field">
-            <label>新密碼</label>
-            <input type="password" id="newPw1" placeholder="請輸入新密碼">
-          </div>
-          <div class="field">
-            <label>確認新密碼</label>
-            <input type="password" id="newPw2" placeholder="請再輸入一次">
-          </div>
+          <div class="field"><label>新密碼</label><input type="password" id="newPw1" placeholder="請輸入新密碼"></div>
+          <div class="field"><label>確認新密碼</label><input type="password" id="newPw2" placeholder="請再輸入一次"></div>
         </div>
         <button class="btn btn-primary" onclick="changePw()">變更密碼</button>
         <span id="pwMsg" style="font-size:13px;margin-left:10px;display:none;"></span>
@@ -740,42 +233,30 @@
   </div>
 </div>
 
-<!-- ── New Event Modal ── -->
+<!-- New Event Modal -->
 <div id="newModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeNewModal()">
   <div class="modal-box">
     <h2 class="modal-title">新增活動</h2>
-
-    <div class="field">
-      <label>活動名稱</label>
-      <input type="text" id="newTitle" placeholder="例：2026.06.03 健管師週二線上課程">
-    </div>
+    <div class="field"><label>活動名稱</label><input type="text" id="newTitle" placeholder="例：2026.06.10 週二健管師線上課程"></div>
     <div class="field-row">
-      <div class="field">
-        <label>活動日期</label>
-        <input type="date" id="newDate">
-      </div>
+      <div class="field"><label>活動日期</label><input type="date" id="newDate"></div>
+      <div class="field"><label>活動時間</label><input type="time" id="newTime" value="19:00"></div>
     </div>
-    <div class="field">
-      <label>活動介紹文字</label>
-      <textarea id="newDesc" placeholder="請輸入本次活動說明，會顯示在來賓入口頁面..."></textarea>
-    </div>
-
+    <div class="field"><label>Zoom 連結</label><input type="text" id="newZoom" placeholder="https://zoom.us/j/..."></div>
+    <div class="field"><label>活動介紹文字</label><textarea id="newDesc" placeholder="請輸入本次活動說明，會顯示在來賓入口頁面..."></textarea></div>
     <div class="modal-actions">
       <button class="btn" onclick="closeNewModal()">取消</button>
-      <button class="btn btn-primary" onclick="createEvent()">建立活動</button>
+      <button class="btn btn-primary" id="createBtn" onclick="createEvent()">建立活動</button>
     </div>
   </div>
 </div>
 
-<script>
-// ════════════════════════════════
-//  Auth
-// ════════════════════════════════
-const DEFAULT_PW = '12345678';
+<!-- Toast -->
+<div class="save-toast" id="toast"></div>
 
-function getPassword() {
-  return localStorage.getItem('adminPw') || DEFAULT_PW;
-}
+<script>
+// ── Auth ──
+function getPassword() { return localStorage.getItem('adminPw') || '12345678'; }
 
 function doLogin() {
   const pw = document.getElementById('pwInput').value;
@@ -792,21 +273,22 @@ function doLogout() {
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('adminLayout').style.display  = 'none';
   document.getElementById('pwInput').value = '';
+  document.getElementById('loginError').textContent = '';
 }
 
 function changePw() {
   const p1 = document.getElementById('newPw1').value;
   const p2 = document.getElementById('newPw2').value;
   const msg = document.getElementById('pwMsg');
-  if (!p1) { showMsg(msg,'請輸入新密碼','red'); return; }
-  if (p1 !== p2) { showMsg(msg,'兩次密碼不一致','red'); return; }
+  if (!p1) { showInlineMsg(msg, '請輸入新密碼', 'var(--danger)'); return; }
+  if (p1 !== p2) { showInlineMsg(msg, '兩次密碼不一致', 'var(--danger)'); return; }
   localStorage.setItem('adminPw', p1);
-  showMsg(msg,'✓ 密碼已變更','var(--accent)');
+  showInlineMsg(msg, '✓ 密碼已變更', 'var(--accent)');
+  document.getElementById('newPw1').value = '';
+  document.getElementById('newPw2').value = '';
 }
 
-// ════════════════════════════════
-//  Navigation
-// ════════════════════════════════
+// ── Nav ──
 function showSection(name) {
   document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -815,146 +297,112 @@ function showSection(name) {
   if (name === 'registrations') renderRegistrations();
 }
 
-// ════════════════════════════════
-//  Data helpers
-// ════════════════════════════════
-function getEvents()       { return JSON.parse(localStorage.getItem('events') || '[]'); }
-function saveEvents(evts)  { localStorage.setItem('events', JSON.stringify(evts)); }
+// ── Data ──
+function getEvents()      { return JSON.parse(localStorage.getItem('events') || '[]'); }
+function saveEvents(evts) { localStorage.setItem('events', JSON.stringify(evts)); }
 
-// ════════════════════════════════
-//  Init
-// ════════════════════════════════
+// ── Init ──
 function initAdmin() {
   renderStats();
   renderEvents();
-  document.getElementById('zoomInput').value       = localStorage.getItem('zoomLink') || '';
-  document.getElementById('cloudNameInput').value  = localStorage.getItem('cloudName') || '';
-  document.getElementById('presetInput').value     = localStorage.getItem('uploadPreset') || '';
-
-  // Show config banner if cloudinary not set
-  const configured = localStorage.getItem('cloudName') && localStorage.getItem('uploadPreset');
-  document.getElementById('configBanner').style.display = configured ? 'none' : 'block';
+  document.getElementById('cloudNameInput').value = localStorage.getItem('cloudName') || '';
+  document.getElementById('presetInput').value    = localStorage.getItem('uploadPreset') || '';
 }
 
-// ════════════════════════════════
-//  Stats
-// ════════════════════════════════
+// ── Stats ──
 function renderStats() {
-  const events = getEvents();
-  const totalRegs = events.reduce((sum, e) => sum + (e.registrations || []).length, 0);
+  const events     = getEvents();
+  const totalRegs  = events.reduce((s, e) => s + (e.registrations || []).length, 0);
   const activeCount = events.filter(e => e.active).length;
-
   document.getElementById('statsRow').innerHTML = `
     <div class="stat-card"><div class="stat-num">${events.length}</div><div class="stat-label">活動總數</div></div>
     <div class="stat-card"><div class="stat-num">${activeCount}</div><div class="stat-label">上架中</div></div>
-    <div class="stat-card"><div class="stat-num">${totalRegs}</div><div class="stat-label">累計報名</div></div>
-  `;
+    <div class="stat-card"><div class="stat-num">${totalRegs}</div><div class="stat-label">累計報名</div></div>`;
 }
 
-// ════════════════════════════════
-//  Events list
-// ════════════════════════════════
+// ── Render events ──
 let openEventId = null;
 
 function renderEvents() {
-  const events = getEvents();
+  const events    = getEvents();
   const container = document.getElementById('eventsList');
   renderStats();
-
   if (events.length === 0) {
     container.innerHTML = '<div class="empty-state">尚無活動，請點擊「新增活動」開始</div>';
     return;
   }
-
-  container.innerHTML = events.map(ev => `
-    <div class="event-card" id="ec-${ev.id}">
+  container.innerHTML = events.map(ev => {
+    const timeStr = (ev.date || '') + (ev.time ? ' ' + ev.time : '');
+    return `<div class="event-card">
       <div class="event-header ${openEventId===ev.id?'open':''}" onclick="toggleEvent(${ev.id})">
         <div class="status-dot ${ev.active?'active':'inactive'}"></div>
-        <span class="event-title-text">${ev.title || '未命名活動'}</span>
-        <span class="event-date-text">${ev.date || ''}</span>
-        <span class="event-reg-count">${(ev.registrations||[]).length} 位報名</span>
+        <span class="event-title-text">${escHtml(ev.title||'未命名活動')}</span>
+        <span class="event-meta-text">${timeStr}</span>
+        <span class="event-meta-text">${(ev.registrations||[]).length} 位報名</span>
         <span class="badge ${ev.active?'badge-active':'badge-inactive'}">${ev.active?'上架中':'已下架'}</span>
       </div>
       <div class="event-body ${openEventId===ev.id?'open':''}" id="eb-${ev.id}">
         ${renderEventBody(ev)}
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderEventBody(ev) {
   const idMap  = {health:'健管師', guest:'受邀來賓', staff:'行政/工作人員', npo:'社區據點/NPO協會'};
   const tagMap = {health:'id-health', guest:'id-guest', staff:'id-staff', npo:'id-npo'};
-
-  const regsHtml = (ev.registrations || []).length > 0
+  const regsHtml = (ev.registrations||[]).length > 0
     ? `<table class="reg-table">
-        <thead><tr>
-          <th>姓名</th><th>身分</th><th>邀請人</th><th>時間</th>
-        </tr></thead>
-        <tbody>
-          ${ev.registrations.map(r => `
-            <tr>
-              <td style="font-weight:500">${r.name}</td>
-              <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity}</span></td>
-              <td style="color:var(--ink-soft)">${r.inviter}</td>
-              <td style="color:var(--ink-muted)">${r.time||''}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>`
+        <thead><tr><th>姓名</th><th>身分</th><th>邀請人</th><th>時間</th></tr></thead>
+        <tbody>${ev.registrations.map(r=>`
+          <tr>
+            <td style="font-weight:500">${escHtml(r.name)}</td>
+            <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity}</span></td>
+            <td style="color:var(--ink-soft)">${escHtml(r.inviter)}</td>
+            <td style="color:var(--ink-muted)">${r.time||''}</td>
+          </tr>`).join('')}
+        </tbody></table>`
     : '<p style="font-size:13px;color:var(--ink-muted);padding:12px 0">尚無報名紀錄</p>';
 
   return `
+    <!-- DM upload -->
     <div class="dm-upload-area">
-      <div class="dm-preview-wrap">
-        <div class="dm-preview" id="dmPrev-${ev.id}">
-          ${ev.dmUrl ? `<img src="${ev.dmUrl}" alt="DM">` : '<span style="padding:8px;font-size:11px">尚未上傳 DM</span>'}
-        </div>
+      <div class="dm-preview" id="dmPrev-${ev.id}">
+        ${ev.dmUrl ? `<img src="${ev.dmUrl}" alt="DM">` : '<span style="padding:6px;font-size:11px">尚未上傳 DM</span>'}
       </div>
       <div class="dm-upload-controls">
         <p style="font-size:13px;font-weight:500;margin-bottom:2px">活動 DM（直式圖片）</p>
-        <p class="upload-hint">上傳後會顯示在來賓入口頁面左側<br>建議比例 2:3，JPG / PNG</p>
+        <p class="upload-hint">建議比例 2:3，JPG / PNG</p>
         <input type="file" id="fileInput-${ev.id}" accept="image/*" onchange="uploadDM(${ev.id}, this)">
-        <button class="btn btn-sm" onclick="document.getElementById('fileInput-${ev.id}').click()">
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          上傳 DM 圖片
-        </button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-sm" onclick="document.getElementById('fileInput-${ev.id}').click()">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            上傳 DM
+          </button>
+          ${ev.dmUrl ? `<button class="btn btn-sm btn-danger" onclick="removeDM(${ev.id})">移除圖片</button>` : ''}
+        </div>
         <span class="upload-progress" id="uploadProg-${ev.id}">上傳中…</span>
-        ${ev.dmUrl ? `<button class="btn btn-sm btn-danger" onclick="removeDM(${ev.id})">移除圖片</button>` : ''}
       </div>
     </div>
 
-    <div class="field">
-      <label>活動名稱</label>
-      <input type="text" id="editTitle-${ev.id}" value="${escHtml(ev.title||'')}">
-    </div>
+    <!-- Edit fields -->
+    <div class="field"><label>活動名稱</label><input type="text" id="editTitle-${ev.id}" value="${escHtml(ev.title||'')}"></div>
     <div class="field-row">
-      <div class="field">
-        <label>活動日期</label>
-        <input type="date" id="editDate-${ev.id}" value="${ev.date||''}">
-      </div>
+      <div class="field"><label>活動日期</label><input type="date" id="editDate-${ev.id}" value="${ev.date||''}"></div>
+      <div class="field"><label>活動時間</label><input type="time" id="editTime-${ev.id}" value="${ev.time||''}"></div>
     </div>
-    <div class="field">
-      <label>活動介紹</label>
-      <textarea id="editDesc-${ev.id}">${escHtml(ev.description||'')}</textarea>
-    </div>
+    <div class="field"><label>Zoom 連結</label><input type="text" id="editZoom-${ev.id}" value="${escHtml(ev.zoomLink||'')}" placeholder="https://zoom.us/j/..."></div>
+    <div class="field"><label>活動介紹</label><textarea id="editDesc-${ev.id}">${escHtml(ev.description||'')}</textarea></div>
 
-    <div style="font-size:13px;font-weight:500;margin-bottom:8px;margin-top:4px">
-      報名名單（${(ev.registrations||[]).length} 人）
-    </div>
+    <div style="font-size:13px;font-weight:500;margin-bottom:8px;margin-top:4px">報名名單（${(ev.registrations||[]).length} 人）</div>
     ${regsHtml}
 
     <div class="event-actions">
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-sm ${ev.active?'btn-danger':''}" onclick="toggleActive(${ev.id})">
-          ${ev.active?'下架活動':'上架活動'}
-        </button>
-      </div>
+      <button class="btn btn-sm ${ev.active?'btn-danger':''}" onclick="toggleActive(${ev.id})">
+        ${ev.active?'下架活動':'上架活動'}
+      </button>
       <button class="btn btn-sm btn-primary" onclick="saveEvent(${ev.id})">儲存變更</button>
-    </div>
-  `;
+    </div>`;
 }
 
 function toggleEvent(id) {
@@ -963,93 +411,105 @@ function toggleEvent(id) {
 }
 
 function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ════════════════════════════════
-//  Save / toggle
-// ════════════════════════════════
+// ── Save / toggle ──
 function saveEvent(id) {
   const events = getEvents();
-  const idx = events.findIndex(e => e.id === id);
+  const idx    = events.findIndex(e => e.id === id);
   if (idx < 0) return;
   events[idx].title       = document.getElementById(`editTitle-${id}`).value;
   events[idx].date        = document.getElementById(`editDate-${id}`).value;
+  events[idx].time        = document.getElementById(`editTime-${id}`).value;
+  events[idx].zoomLink    = document.getElementById(`editZoom-${id}`).value;
   events[idx].description = document.getElementById(`editDesc-${id}`).value;
   saveEvents(events);
+  openEventId = id;
   renderEvents();
+  showToast('✓ 已儲存');
 }
 
 function toggleActive(id) {
   const events = getEvents();
-  const idx = events.findIndex(e => e.id === id);
+  const idx    = events.findIndex(e => e.id === id);
   if (idx < 0) return;
   events[idx].active = !events[idx].active;
   saveEvents(events);
+  openEventId = id;
   renderEvents();
 }
 
-// ════════════════════════════════
-//  New event modal
-// ════════════════════════════════
-function openNewModal()  { document.getElementById('newModal').style.display = 'flex'; }
+// ── New event modal ──
+function openNewModal() {
+  document.getElementById('newModal').style.display = 'flex';
+  // Default date to next Tuesday
+  const d = new Date();
+  const daysUntilTue = (2 - d.getDay() + 7) % 7 || 7;
+  d.setDate(d.getDate() + daysUntilTue);
+  document.getElementById('newDate').value = d.toISOString().split('T')[0];
+  document.getElementById('newTime').value = '19:00';
+  document.getElementById('newTitle').focus();
+}
+
 function closeNewModal() { document.getElementById('newModal').style.display = 'none'; }
 
 function createEvent() {
   const title = document.getElementById('newTitle').value.trim();
   const date  = document.getElementById('newDate').value;
+  const time  = document.getElementById('newTime').value;
+  const zoom  = document.getElementById('newZoom').value.trim();
   const desc  = document.getElementById('newDesc').value.trim();
 
-  if (!title) { alert('請填寫活動名稱'); return; }
+  if (!title) {
+    document.getElementById('newTitle').style.borderColor = 'var(--danger)';
+    document.getElementById('newTitle').focus();
+    return;
+  }
 
   const events = getEvents();
-  events.unshift({
-    id: Date.now(),
-    title, date, description: desc,
-    dmUrl: '',
-    active: true,
-    registrations: []
-  });
+  const newId  = Date.now();
+  events.unshift({ id: newId, title, date, time, zoomLink: zoom, description: desc, dmUrl: '', active: true, registrations: [] });
   saveEvents(events);
   closeNewModal();
-  document.getElementById('newTitle').value = '';
-  document.getElementById('newDate').value  = '';
-  document.getElementById('newDesc').value  = '';
-  openEventId = events[0].id;
+
+  // Reset form
+  ['newTitle','newDate','newTime','newZoom','newDesc'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+    el.style.borderColor = '';
+  });
+
+  openEventId = newId;
   renderEvents();
+  showToast('✓ 活動已建立');
 }
 
-// ════════════════════════════════
-//  Cloudinary upload
-// ════════════════════════════════
+// ── Cloudinary upload ──
 async function uploadDM(id, input) {
   const file      = input.files[0];
   const cloudName = localStorage.getItem('cloudName');
   const preset    = localStorage.getItem('uploadPreset');
-
   if (!cloudName || !preset) {
-    alert('請先至「Zoom 設定」頁面填寫 Cloudinary 設定後再上傳。');
+    alert('請先至「系統設定」填寫 Cloudinary 設定後再上傳。');
     return;
   }
-
   const prog = document.getElementById(`uploadProg-${id}`);
   prog.style.display = 'inline';
-
   try {
     const fd = new FormData();
     fd.append('file', file);
     fd.append('upload_preset', preset);
-
     const res  = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, { method:'POST', body:fd });
     const data = await res.json();
-
     if (data.secure_url) {
       const events = getEvents();
-      const idx = events.findIndex(e => e.id === id);
+      const idx    = events.findIndex(e => e.id === id);
       if (idx >= 0) { events[idx].dmUrl = data.secure_url; saveEvents(events); }
       prog.style.display = 'none';
       openEventId = id;
       renderEvents();
+      showToast('✓ DM 已上傳');
     } else {
       prog.style.display = 'none';
       alert('上傳失敗：' + (data.error?.message || '請確認 Cloudinary 設定'));
@@ -1062,86 +522,55 @@ async function uploadDM(id, input) {
 
 function removeDM(id) {
   const events = getEvents();
-  const idx = events.findIndex(e => e.id === id);
+  const idx    = events.findIndex(e => e.id === id);
   if (idx >= 0) { events[idx].dmUrl = ''; saveEvents(events); openEventId = id; renderEvents(); }
 }
 
-// ════════════════════════════════
-//  Zoom / Cloudinary settings
-// ════════════════════════════════
-function saveZoom() {
-  localStorage.setItem('zoomLink', document.getElementById('zoomInput').value.trim());
-  const msg = document.getElementById('zoomSaved');
-  msg.style.display = 'inline';
-  setTimeout(()=>msg.style.display='none', 2000);
-}
-
+// ── Settings ──
 function saveCloudinary() {
   localStorage.setItem('cloudName',    document.getElementById('cloudNameInput').value.trim());
   localStorage.setItem('uploadPreset', document.getElementById('presetInput').value.trim());
-  const msg = document.getElementById('cdnSaved');
-  msg.style.display = 'inline';
-  setTimeout(()=>msg.style.display='none', 2000);
-  document.getElementById('configBanner').style.display = 'none';
+  showInlineMsg(document.getElementById('cdnSaved'), '✓ 已儲存', 'var(--accent)');
 }
 
-// ════════════════════════════════
-//  Registrations
-// ════════════════════════════════
+// ── Registrations ──
 const idMap  = {health:'健管師', guest:'受邀來賓', staff:'行政/工作人員', npo:'社區據點/NPO協會'};
 const tagMap = {health:'id-health', guest:'id-guest', staff:'id-staff', npo:'id-npo'};
 
 function renderRegistrations() {
-  const events  = getEvents();
-  const allRegs = events.flatMap(ev =>
-    (ev.registrations||[]).map(r => ({...r, eventTitle: ev.title, eventDate: ev.date}))
-  );
-
+  const events    = getEvents();
   const container = document.getElementById('regContent');
-
-  if (allRegs.length === 0) {
-    container.innerHTML = '<div class="empty-state">尚無任何報名紀錄</div>';
-    return;
-  }
-
-  const groupByEvent = {};
-  events.forEach(ev => {
-    if ((ev.registrations||[]).length > 0)
-      groupByEvent[ev.id] = { title: ev.title, date: ev.date, regs: ev.registrations };
-  });
-
-  container.innerHTML = Object.entries(groupByEvent).map(([id, grp]) => `
+  const withRegs  = events.filter(ev => (ev.registrations||[]).length > 0);
+  if (withRegs.length === 0) { container.innerHTML = '<div class="empty-state">尚無任何報名紀錄</div>'; return; }
+  container.innerHTML = withRegs.map(ev => `
     <div class="event-card" style="margin-bottom:16px">
-      <div class="event-header open" style="cursor:default">
-        <span class="event-title-text">${grp.title}</span>
-        <span class="event-date-text">${grp.date||''}</span>
-        <span class="event-reg-count">${grp.regs.length} 人</span>
+      <div class="event-header open" style="cursor:default;border-bottom-color:var(--line);background:var(--paper-warm);">
+        <span class="event-title-text">${escHtml(ev.title)}</span>
+        <span class="event-meta-text">${ev.date||''} ${ev.time||''}</span>
+        <span class="event-meta-text">${ev.registrations.length} 人</span>
       </div>
       <div class="event-body open">
         <table class="reg-table">
           <thead><tr><th>姓名</th><th>身分</th><th>邀請人</th><th>時間</th></tr></thead>
-          <tbody>
-            ${grp.regs.map(r=>`
-              <tr>
-                <td style="font-weight:500">${r.name}</td>
-                <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity}</span></td>
-                <td style="color:var(--ink-soft)">${r.inviter}</td>
-                <td style="color:var(--ink-muted)">${r.time||''}</td>
-              </tr>
-            `).join('')}
+          <tbody>${ev.registrations.map(r=>`
+            <tr>
+              <td style="font-weight:500">${escHtml(r.name)}</td>
+              <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity}</span></td>
+              <td style="color:var(--ink-soft)">${escHtml(r.inviter)}</td>
+              <td style="color:var(--ink-muted)">${r.time||''}</td>
+            </tr>`).join('')}
           </tbody>
         </table>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function exportCSV() {
   const events = getEvents();
-  const rows   = [['活動名稱','日期','姓名','身分','邀請人','時間']];
+  const rows   = [['活動名稱','日期','時間','姓名','身分','邀請人','登入時間']];
   events.forEach(ev => {
     (ev.registrations||[]).forEach(r => {
-      rows.push([ev.title, ev.date, r.name, idMap[r.identity]||r.identity, r.inviter, r.time||'']);
+      rows.push([ev.title, ev.date||'', ev.time||'', r.name, idMap[r.identity]||r.identity, r.inviter, r.time||'']);
     });
   });
   const csv  = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
@@ -1152,14 +581,19 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-// ════════════════════════════════
-//  Utils
-// ════════════════════════════════
-function showMsg(el, text, color) {
+// ── Utils ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function showInlineMsg(el, text, color) {
   el.textContent = text;
   el.style.color = color;
   el.style.display = 'inline';
-  setTimeout(()=>el.style.display='none', 3000);
+  setTimeout(() => el.style.display = 'none', 3000);
 }
 </script>
 </body>
