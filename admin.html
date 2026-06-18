@@ -115,6 +115,19 @@
   .empty-state { text-align: center; padding: 48px 24px; color: var(--ink-muted); font-size: 14px; line-height: 1.7; }
   .loading-state { text-align: center; padding: 48px 24px; color: var(--ink-muted); font-size: 14px; }
 
+  .manager-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .manager-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--line); flex-shrink: 0; }
+  .manager-avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--paper-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .manager-info { flex: 1; min-width: 0; }
+  .manager-name { font-size: 15px; font-weight: 500; }
+  .manager-meta { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  .approve-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--line); transition: all 0.12s; font-family: inherit; flex-shrink: 0; }
+  .approve-btn.approved { background: var(--accent-light); border-color: var(--accent-mid); color: var(--accent); }
+  .approve-btn.pending  { background: var(--paper-warm); border-color: var(--line); color: var(--ink-muted); }
+  .view-records-btn { display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border-radius: var(--radius); font-size: 12px; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink-soft); font-family: inherit; flex-shrink: 0; }
+  .view-records-btn:hover { background: var(--paper-warm); }
+  .modal-rec-row { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .modal-rec-row:last-child { border-bottom: none; }
   .save-toast { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff; padding: 10px 18px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 9999; }
   .save-toast.show { opacity: 1; transform: translateY(0); }
   .err-toast { background: var(--danger); }
@@ -151,6 +164,10 @@
       <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       報名紀錄
     </div>
+    <div class="nav-item" onclick="showSection('managers')" id="nav-managers">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      健管師名冊
+    </div>
     <div class="nav-item" onclick="showSection('settings')" id="nav-settings">
       <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
       系統設定
@@ -186,6 +203,35 @@
         </button>
       </div>
       <div id="regContent"><div class="loading-state">載入中…</div></div>
+    </div>
+
+    <div id="section-managers" class="page-section">
+      <div class="section-header">
+        <h2 class="section-title">健管師名冊</h2>
+        <button class="btn btn-sm" onclick="loadManagers()">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.68-2.65"/></svg>
+          重新整理
+        </button>
+      </div>
+      <div id="managersList"><div class="loading-state">載入中…</div></div>
+
+      <!-- 個別健管師紀錄 modal -->
+      <div id="managerModal" class="modal-overlay" style="display:none;" onclick="closeManagerModal()">
+        <div class="modal-box" onclick="event.stopPropagation()" style="max-width:600px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+            <img id="modalAvatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-mid);" src="" alt=""
+              onerror="this.style.display='none'">
+            <div>
+              <h3 id="modalName" style="font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;"></h3>
+              <p id="modalMeta" style="font-size:12px;color:var(--ink-muted);margin-top:2px;"></p>
+            </div>
+          </div>
+          <div id="modalRecords"></div>
+          <div style="margin-top:20px;text-align:right;">
+            <button class="btn" onclick="closeManagerModal()">關閉</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="section-settings" class="page-section">
@@ -311,6 +357,7 @@ function showSection(name) {
   document.getElementById('section-'+name).classList.add('active');
   document.getElementById('nav-'+name).classList.add('active');
   if (name==='registrations') loadRegistrations();
+  if (name==='managers') loadManagers();
 }
 
 // ── Cloudinary settings (只存 localStorage，不敏感) ──
@@ -656,6 +703,91 @@ async function exportCSV() {
 }
 
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── 健管師名冊 ──
+let cachedManagers = [];
+
+async function loadManagers() {
+  document.getElementById('managersList').innerHTML = '<div class="loading-state">載入中…</div>';
+  try {
+    const data = await sheetsGet({ action: 'getHealthManagers' });
+    if (!data.success) throw new Error(data.error);
+    cachedManagers = data.managers || [];
+    renderManagers();
+  } catch(err) {
+    document.getElementById('managersList').innerHTML = `<div class="empty-state">載入失敗：${err.message}</div>`;
+  }
+}
+
+function renderManagers() {
+  const container = document.getElementById('managersList');
+  if (cachedManagers.length === 0) {
+    container.innerHTML = '<div class="empty-state">尚無健管師登入紀錄</div>';
+    return;
+  }
+
+  container.innerHTML = cachedManagers.map(m => {
+    const avatarHtml = m.pictureUrl
+      ? `<img class="manager-avatar" src="${m.pictureUrl}" alt="" onerror="this.style.display='none'">`
+      : `<div class="manager-avatar-placeholder"><svg width="20" height="20" fill="#888" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>`;
+    return `<div class="manager-card">
+      ${avatarHtml}
+      <div class="manager-info">
+        <div class="manager-name">${escHtml(m.name)}</div>
+        <div class="manager-meta">出席 ${m.attendCount} 場　首次登入 ${m.firstLogin.substring(0,10)}</div>
+      </div>
+      <button class="view-records-btn" onclick="viewManagerRecords('${m.lineUserId}')">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        紀錄
+      </button>
+      <button class="approve-btn ${m.approved ? 'approved' : 'pending'}" onclick="toggleApprove('${m.lineUserId}', ${m.rowIndex}, ${m.approved})">
+        ${m.approved
+          ? '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> 已核准'
+          : '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 待審核'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+async function toggleApprove(lineUserId, rowIndex, currentApproved) {
+  const newApproved = !currentApproved;
+  await sheetsPost({ action: 'approveManager', rowIndex, approved: newApproved });
+  const m = cachedManagers.find(m => m.lineUserId === lineUserId);
+  if (m) m.approved = newApproved;
+  renderManagers();
+  showToast(newApproved ? '✓ 已核准' : '已取消核准');
+}
+
+async function viewManagerRecords(lineUserId) {
+  const m = cachedManagers.find(m => m.lineUserId === lineUserId);
+  if (!m) return;
+
+  document.getElementById('modalName').textContent = m.name;
+  document.getElementById('modalMeta').textContent = `出席 ${m.attendCount} 場`;
+  document.getElementById('modalAvatar').src = m.pictureUrl || '';
+  document.getElementById('modalRecords').innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink-muted)">載入中…</div>';
+  document.getElementById('managerModal').style.display = 'flex';
+
+  try {
+    const data = await sheetsGet({ action: 'getCRMData', lineUserId });
+    const records = (data.records || []).reverse();
+    if (records.length === 0) {
+      document.getElementById('modalRecords').innerHTML = '<p style="font-size:13px;color:var(--ink-muted);padding:12px 0">尚無出席紀錄</p>';
+      return;
+    }
+    document.getElementById('modalRecords').innerHTML = records.map(r => `
+      <div class="modal-rec-row">
+        <span style="font-weight:500;flex:1;">${escHtml(r.eventTitle)}</span>
+        <span style="color:var(--ink-muted);font-size:12px;">${r.eventDate || ''}</span>
+      </div>`).join('');
+  } catch(err) {
+    document.getElementById('modalRecords').innerHTML = '<p style="color:var(--danger);font-size:13px;">載入失敗</p>';
+  }
+}
+
+function closeManagerModal() {
+  document.getElementById('managerModal').style.display = 'none';
+}
 
 function showToast(msg,isErr=false){
   const t=document.getElementById('toast');

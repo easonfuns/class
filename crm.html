@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>健管師出席紀錄</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c1c1e; --ink-soft: #48484a; --ink-muted: #8e8e93;
+    --paper: #faf9f7; --paper-warm: #f2efe9; --paper-dark: #e8e4dc;
+    --accent: #3d5a3e; --accent-light: #e8f0e8; --accent-mid: #6b9e6c;
+    --line: rgba(0,0,0,0.1); --radius: 4px; --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper-warm); color: var(--ink); min-height: 100vh; }
+
+  /* ── Login screen ── */
+  .login-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; }
+  .login-logo { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; margin-bottom: 40px; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; }
+  .login-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 40px 32px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .login-title { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .login-sub { font-size: 14px; color: var(--ink-muted); margin-bottom: 32px; line-height: 1.7; }
+  .line-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: #06C755; color: #fff; border: none; border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+  .line-btn:hover { background: #05a847; }
+
+  /* ── Pending screen ── */
+  .pending-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+  .pending-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 40px 32px; width: 100%; max-width: 380px; text-align: center; }
+  .pending-icon { width: 60px; height: 60px; border-radius: 50%; background: #fff8e6; border: 2px solid #f0c040; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+  .pending-title { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .pending-sub { font-size: 14px; color: var(--ink-muted); line-height: 1.8; margin-bottom: 24px; }
+  .logout-link { font-size: 13px; color: var(--ink-muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .logout-link:hover { color: var(--ink); }
+
+  /* ── Main CRM screen ── */
+  .crm-wrap { max-width: 680px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  /* Header */
+  .crm-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+  .crm-brand { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+
+  /* Profile card */
+  .profile-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; display: flex; align-items: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-mid); flex-shrink: 0; }
+  .profile-avatar-placeholder { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .profile-name { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .profile-sub { font-size: 13px; color: var(--ink-muted); }
+  .profile-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--accent-light); color: var(--accent); font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-top: 6px; }
+
+  /* Stats row */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 16px; text-align: center; }
+  .stat-num { font-family: 'Noto Serif TC', serif; font-size: 28px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* Records */
+  .records-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
+  .records-header { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .records-title { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .record-row { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+  .record-row:last-child { border-bottom: none; }
+  .record-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-mid); flex-shrink: 0; }
+  .record-info { flex: 1; min-width: 0; }
+  .record-title { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .record-meta { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  .record-time { font-size: 12px; color: var(--ink-muted); flex-shrink: 0; text-align: right; }
+
+  .empty-records { padding: 40px 20px; text-align: center; color: var(--ink-muted); font-size: 14px; }
+
+  .loading-overlay { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--paper-dark); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-num { font-size: 22px; }
+    .profile-card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loadingScreen" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Login -->
+<div id="loginScreen" class="login-screen" style="display:none;">
+  <div class="login-logo">
+    <div class="logo-mark">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </div>
+    健管師出席紀錄
+  </div>
+  <div class="login-card">
+    <h1 class="login-title">健管師登入</h1>
+    <p class="login-sub">請使用您的 LINE 帳號登入<br>查看個人出席紀錄</p>
+    <button class="line-btn" onclick="startLineLogin()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+        <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+      </svg>
+      使用 LINE 登入
+    </button>
+  </div>
+</div>
+
+<!-- Pending -->
+<div id="pendingScreen" class="pending-screen" style="display:none;">
+  <div class="pending-card">
+    <div class="pending-icon">
+      <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="#c9a227" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <h2 class="pending-title">帳號審核中</h2>
+    <p class="pending-sub">您的帳號正在審核中，<br>請聯繫管理員完成核准後即可查看紀錄。</p>
+    <span class="logout-link" onclick="doLogout()">登出</span>
+  </div>
+</div>
+
+<!-- CRM main -->
+<div id="crmScreen" style="display:none;">
+  <div class="crm-wrap">
+    <div class="crm-header">
+      <div class="crm-brand">
+        <div class="logo-mark" style="width:28px;height:28px;">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          </svg>
+        </div>
+        健管師出席紀錄
+      </div>
+      <span class="logout-link" onclick="doLogout()">登出</span>
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-card">
+      <img id="profileAvatar" class="profile-avatar" src="" alt=""
+        onerror="this.style.display='none';document.getElementById('profileAvatarPlaceholder').style.display='flex'">
+      <div id="profileAvatarPlaceholder" class="profile-avatar-placeholder" style="display:none;">
+        <svg width="28" height="28" fill="#fff" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </div>
+      <div>
+        <div class="profile-name" id="profileName"></div>
+        <div class="profile-sub">健管師</div>
+        <div class="profile-badge">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+          已核准
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="statTotal">—</div>
+        <div class="stat-label">累計出席</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statYear">—</div>
+        <div class="stat-label" id="statYearLabel">今年出席</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statRecent">—</div>
+        <div class="stat-label">近三個月</div>
+      </div>
+    </div>
+
+    <!-- Records -->
+    <div class="records-card">
+      <div class="records-header">
+        <span class="records-title">出席紀錄</span>
+        <span style="font-size:12px;color:var(--ink-muted);" id="recordCount"></span>
+      </div>
+      <div id="recordsList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS_URL        = 'https://script.google.com/macros/s/AKfycbxWwieJD31_Or6FNdH6LHNY07hWepbKBpjvBb4Co3wYtX0QqpieDJoTxKKICMUIHb660w/exec';
+const LINE_CLIENT_ID = '2010433664';
+const LINE_REDIRECT  = 'https://easonfuns.github.io/class/crm-callback.html';
+
+let currentProfile = null;
+
+// ── 初始化 ──
+async function init() {
+  // 從 callback 回來後取得 profile
+  const stored = sessionStorage.getItem('crm_profile');
+  if (stored) {
+    sessionStorage.removeItem('crm_profile');
+    currentProfile = JSON.parse(stored);
+    sessionStorage.setItem('crm_logged_in', JSON.stringify(currentProfile));
+    await loadCRM();
+    return;
+  }
+
+  // 已登入
+  const loggedIn = sessionStorage.getItem('crm_logged_in');
+  if (loggedIn) {
+    currentProfile = JSON.parse(loggedIn);
+    await loadCRM();
+    return;
+  }
+
+  // 未登入
+  showScreen('login');
+}
+
+// ── LINE Login ──
+function startLineLogin() {
+  const state = Math.random().toString(36).substring(2);
+  sessionStorage.setItem('crm_line_state', state);
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id:     LINE_CLIENT_ID,
+    redirect_uri:  LINE_REDIRECT,
+    state,
+    scope:         'profile openid',
+    nonce:         Math.random().toString(36).substring(2)
+  });
+  window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
+}
+
+function doLogout() {
+  sessionStorage.removeItem('crm_logged_in');
+  currentProfile = null;
+  showScreen('login');
+}
+
+// ── 載入 CRM 資料 ──
+async function loadCRM() {
+  showScreen('loading');
+  try {
+    const res  = await fetch(GAS_URL + '?action=getCRMData&lineUserId=' + encodeURIComponent(currentProfile.userId));
+    const data = await res.json();
+
+    if (!data.success) {
+      showScreen('login');
+      return;
+    }
+
+    if (!data.approved) {
+      showScreen('pending');
+      return;
+    }
+
+    renderCRM(data.records || []);
+    showScreen('crm');
+
+  } catch(err) {
+    showScreen('login');
+  }
+}
+
+// ── 渲染 ──
+function renderCRM(records) {
+  // Profile
+  document.getElementById('profileName').textContent = currentProfile.displayName;
+  if (currentProfile.pictureUrl) {
+    document.getElementById('profileAvatar').src = currentProfile.pictureUrl;
+  } else {
+    document.getElementById('profileAvatar').style.display = 'none';
+    document.getElementById('profileAvatarPlaceholder').style.display = 'flex';
+  }
+
+  // Stats
+  const thisYear = new Date().getFullYear();
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+  const yearCount   = records.filter(r => r.loginDate && r.loginDate.startsWith(String(thisYear))).length;
+  const recentCount = records.filter(r => {
+    if (!r.loginDate) return false;
+    return new Date(r.loginDate) >= threeMonthsAgo;
+  }).length;
+
+  document.getElementById('statTotal').textContent    = records.length;
+  document.getElementById('statYear').textContent     = yearCount;
+  document.getElementById('statYearLabel').textContent = `${thisYear} 年`;
+  document.getElementById('statRecent').textContent   = recentCount;
+  document.getElementById('recordCount').textContent  = `共 ${records.length} 筆`;
+
+  // Records list（倒序）
+  const list = document.getElementById('recordsList');
+  if (records.length === 0) {
+    list.innerHTML = '<div class="empty-records">尚無出席紀錄</div>';
+    return;
+  }
+
+  const sorted = [...records].reverse();
+  list.innerHTML = sorted.map(r => {
+    const dateStr = formatDisplay(r.eventDate, r.eventTime);
+    return `<div class="record-row">
+      <div class="record-dot"></div>
+      <div class="record-info">
+        <div class="record-title">${escHtml(r.eventTitle || '')}</div>
+        <div class="record-meta">${dateStr}</div>
+      </div>
+      <div class="record-time">${r.loginDate ? r.loginDate.substring(0,10) : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── 日期格式化 ──
+function formatDisplay(date, time) {
+  let dateStr = '';
+  let timeStr = '';
+  if (date) {
+    const parts = String(date).trim().split('-');
+    if (parts.length === 3) {
+      dateStr = `${parts[0]} 年 ${parseInt(parts[1])} 月 ${parseInt(parts[2])} 日`;
+    }
+  }
+  if (time) {
+    const t = String(time).trim().substring(0, 5);
+    const col = t.indexOf(':');
+    if (col > 0) {
+      const h = parseInt(t.substring(0, col), 10);
+      const mn = t.substring(col + 1);
+      if (!isNaN(h)) timeStr = `${h < 12 ? '上午' : '下午'} ${h === 0 ? 12 : h > 12 ? h - 12 : h}:${mn}`;
+    }
+  }
+  return [dateStr, timeStr].filter(Boolean).join('　');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showScreen(name) {
+  document.getElementById('loadingScreen').style.display = name === 'loading' ? 'flex'  : 'none';
+  document.getElementById('loginScreen').style.display   = name === 'login'   ? 'flex'  : 'none';
+  document.getElementById('pendingScreen').style.display = name === 'pending'  ? 'flex'  : 'none';
+  document.getElementById('crmScreen').style.display     = name === 'crm'     ? 'block' : 'none';
+}
+
+init();
+</script>
+</body>
+</html>
