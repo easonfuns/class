@@ -242,6 +242,16 @@
 
   .identity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .id-chip { padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; color: var(--ink-soft); cursor: pointer; transition: all 0.15s; text-align: center; }
+  .line-login-area { margin-top: 20px; padding: 20px; background: var(--paper-warm); border: 1px solid var(--line); border-radius: var(--radius-lg); text-align: center; display: none; }
+  .line-login-area p { font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; line-height: 1.7; }
+  .line-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 24px; background: #06C755; color: #fff; border: none; border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; transition: background 0.15s; }
+  .line-btn:hover { background: #05a847; }
+  .line-btn svg { flex-shrink: 0; }
+  .line-logged-in { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #e8f8ee; border: 1px solid #9edab8; border-radius: var(--radius); }
+  .line-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #06C755; }
+  .line-avatar-placeholder { width: 40px; height: 40px; border-radius: 50%; background: #06C755; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .line-user-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .line-user-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
   .id-chip:hover { border-color: var(--accent-mid); color: var(--accent); background: var(--accent-light); }
   .id-chip.selected { border-color: var(--accent); background: var(--accent); color: #fff; font-weight: 500; }
 
@@ -338,7 +348,34 @@
         </div>
       </div>
 
-      <div class="field">
+      <!-- 健管師：LINE 登入區塊 -->
+      <div class="line-login-area" id="lineLoginArea">
+        <div id="lineNotLoggedIn">
+          <p>健管師請使用 LINE 帳號登入<br>系統將自動帶入您的姓名並記錄出席</p>
+          <button class="line-btn" onclick="startLineLogin()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+              <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+            </svg>
+            使用 LINE 登入
+          </button>
+        </div>
+        <div id="lineLoggedIn" style="display:none;">
+          <div class="line-logged-in">
+            <img id="lineAvatar" class="line-avatar" src="" alt="" onerror="this.style.display='none';document.getElementById('lineAvatarPlaceholder').style.display='flex'">
+            <div id="lineAvatarPlaceholder" class="line-avatar-placeholder" style="display:none;">
+              <svg width="20" height="20" fill="#fff" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            </div>
+            <div>
+              <div class="line-user-name" id="lineUserName"></div>
+              <div class="line-user-sub">LINE 帳號已驗證 ✓</div>
+            </div>
+          </div>
+          <button style="margin-top:10px;font-size:12px;color:var(--ink-muted);background:none;border:none;cursor:pointer;text-decoration:underline;" onclick="clearLineLogin()">更換帳號</button>
+        </div>
+      </div>
+
+      <!-- 非健管師：姓名欄位 -->
+      <div class="field" id="nameField" style="display:none;">
         <label>姓名</label>
         <input type="text" id="nameInput" placeholder="請輸入您的姓名">
       </div>
@@ -348,7 +385,7 @@
         <input type="text" id="inviterInput" placeholder="請輸入邀請您的人員姓名">
       </div>
 
-      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">確認登入 →</button>
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()" style="display:none;">確認登入 →</button>
     </div>
 
     <div id="successSection" style="display:none;">
@@ -477,33 +514,111 @@ function goBackToPicker() {
   currentEvent = null;
 }
 
+// ── LINE Login ──
+const LINE_CLIENT_ID = '2010433664';
+const LINE_REDIRECT  = 'https://easonfuns.github.io/class/callback.html';
+let lineProfile = null; // { userId, displayName, pictureUrl }
+
+function startLineLogin() {
+  // 把目前活動 ID 存起來，callback 回來後繼續
+  sessionStorage.setItem('pendingEventId', currentEvent ? currentEvent.id : '');
+  const state    = Math.random().toString(36).substring(2);
+  const nonce    = Math.random().toString(36).substring(2);
+  sessionStorage.setItem('line_state', state);
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id:     LINE_CLIENT_ID,
+    redirect_uri:  LINE_REDIRECT,
+    state,
+    scope:         'profile openid',
+    nonce
+  });
+  window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?' + params.toString();
+}
+
+function applyLineProfile(profile) {
+  lineProfile = profile;
+  document.getElementById('lineNotLoggedIn').style.display = 'none';
+  document.getElementById('lineLoggedIn').style.display    = 'block';
+  document.getElementById('lineUserName').textContent      = profile.displayName;
+  if (profile.pictureUrl) {
+    document.getElementById('lineAvatar').src = profile.pictureUrl;
+  } else {
+    document.getElementById('lineAvatar').style.display = 'none';
+    document.getElementById('lineAvatarPlaceholder').style.display = 'flex';
+  }
+  document.getElementById('submitBtn').style.display = 'block';
+}
+
+function clearLineLogin() {
+  lineProfile = null;
+  document.getElementById('lineNotLoggedIn').style.display = 'block';
+  document.getElementById('lineLoggedIn').style.display    = 'none';
+  document.getElementById('submitBtn').style.display       = 'none';
+}
+
+// callback.html 完成後會呼叫這裡
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'LINE_LOGIN_SUCCESS') {
+    applyLineProfile(e.data.profile);
+  }
+});
+
 // ── Form ──
 function selectId(el) {
   document.querySelectorAll('.id-chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   selectedId = el.dataset.id;
-  // 只有受邀來賓才顯示邀請人欄位
-  document.getElementById('inviterField').style.display = (selectedId === 'guest') ? 'block' : 'none';
-  if (selectedId !== 'guest') document.getElementById('inviterInput').value = '';
+
+  const isHealth  = selectedId === 'health';
+  const isGuest   = selectedId === 'guest';
+
+  // 健管師：顯示 LINE 登入，隱藏姓名欄
+  document.getElementById('lineLoginArea').style.display = isHealth ? 'block' : 'none';
+  document.getElementById('nameField').style.display     = isHealth ? 'none'  : 'block';
+
+  // 邀請人：只有受邀來賓才顯示
+  document.getElementById('inviterField').style.display = isGuest ? 'block' : 'none';
+  if (!isGuest) document.getElementById('inviterInput').value = '';
+
+  // 送出按鈕：健管師要先 LINE 登入才顯示，其他直接顯示
+  document.getElementById('submitBtn').style.display = isHealth ? (lineProfile ? 'block' : 'none') : 'block';
 }
 
 async function handleSubmit() {
-  const name    = document.getElementById('nameInput').value.trim();
-  const inviter = document.getElementById('inviterInput').value.trim();
   const errEl   = document.getElementById('errorMsg');
+  const isHealth = selectedId === 'health';
+  const isGuest  = selectedId === 'guest';
 
   if (!selectedId) { showError('請選擇您的身分'); return; }
-  if (!name)        { showError('請填寫您的姓名'); return; }
-  if (selectedId === 'guest' && !inviter) { showError('受邀來賓請填寫邀請人'); return; }
-  errEl.style.display = 'none';
 
+  let name = '';
+  let lineUserId = '';
+  let linePicture = '';
+
+  if (isHealth) {
+    if (!lineProfile) { showError('請先使用 LINE 登入'); return; }
+    name        = lineProfile.displayName;
+    lineUserId  = lineProfile.userId;
+    linePicture = lineProfile.pictureUrl || '';
+  } else {
+    name = document.getElementById('nameInput').value.trim();
+    if (!name) { showError('請填寫您的姓名'); return; }
+  }
+
+  if (isGuest) {
+    const inviter = document.getElementById('inviterInput').value.trim();
+    if (!inviter) { showError('受邀來賓請填寫邀請人'); return; }
+  }
+
+  errEl.style.display = 'none';
   const btn = document.getElementById('submitBtn');
   btn.textContent = '送出中…';
   btn.disabled = true;
 
-  const idMap    = {health:'健管師', guest:'受邀來賓', staff:'行政/工作人員', npo:'社區據點/NPO協會'};
-  const loginTime = new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'});
-  const inviterVal = selectedId === 'guest' ? inviter : '';
+  const idMap      = {health:'健管師', guest:'受邀來賓', staff:'行政/工作人員', npo:'社區據點/NPO協會'};
+  const loginTime  = new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit'});
+  const inviterVal = isGuest ? document.getElementById('inviterInput').value.trim() : '';
 
   // 送 Google Sheets
   fetch(GAS_URL, {
@@ -511,15 +626,17 @@ async function handleSubmit() {
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      eventTitle: currentEvent.title || '',
-      eventDate:  currentEvent.date  || '',
-      eventTime:  currentEvent.time  || '',
+      eventTitle:  currentEvent.title || '',
+      eventDate:   currentEvent.date  || '',
+      eventTime:   currentEvent.time  || '',
       name,
-      identity:   idMap[selectedId] || selectedId,
-      inviter:    inviterVal,
-      loginTime
+      identity:    idMap[selectedId] || selectedId,
+      inviter:     inviterVal,
+      loginTime,
+      lineUserId,
+      linePicture
     })
-  }).catch(() => {}); // 失敗靜默，不影響來賓體驗
+  }).catch(() => {});
 
   btn.textContent = '確認登入 →';
   btn.disabled = false;
@@ -540,10 +657,16 @@ function showError(msg) {
 }
 
 function resetForm() {
-  selectedId = '';
+  selectedId  = '';
+  lineProfile = null;
   document.getElementById('nameInput').value    = '';
   document.getElementById('inviterInput').value = '';
-  document.getElementById('inviterField').style.display = 'none';
+  document.getElementById('inviterField').style.display  = 'none';
+  document.getElementById('nameField').style.display     = 'none';
+  document.getElementById('lineLoginArea').style.display = 'none';
+  document.getElementById('submitBtn').style.display     = 'none';
+  document.getElementById('lineNotLoggedIn').style.display = 'block';
+  document.getElementById('lineLoggedIn').style.display    = 'none';
   document.querySelectorAll('.id-chip').forEach(c => c.classList.remove('selected'));
   document.getElementById('errorMsg').style.display = 'none';
   document.getElementById('successSection').style.display = 'none';
@@ -559,7 +682,28 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-loadPicker();
+// 檢查是否從 LINE callback 回來
+(function checkLineCallback() {
+  const profile = sessionStorage.getItem('line_profile');
+  const eventId = sessionStorage.getItem('pendingEventId');
+  if (profile && eventId) {
+    sessionStorage.removeItem('line_profile');
+    sessionStorage.removeItem('pendingEventId');
+    lineProfile = JSON.parse(profile);
+    loadPicker().then(() => {
+      const ev = cachedEvents.find(e => String(e.id) === String(eventId));
+      if (ev) {
+        selectEvent(ev.id);
+        // 自動選健管師
+        const chip = document.querySelector('[data-id="health"]');
+        if (chip) selectId(chip);
+        applyLineProfile(lineProfile);
+      }
+    });
+  } else {
+    loadPicker();
+  }
+})();
 </script>
 </body>
 </html>

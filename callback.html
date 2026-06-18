@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LINE 登入中…</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: #f2efe9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  .icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #e8f8ee; border: 2px solid #9edab8;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #1c1c1e; }
+  p  { font-size: 14px; color: #8e8e93; line-height: 1.7; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid #e8e4dc;
+    border-top-color: #06C755;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .err { color: #c0392b; font-size: 13px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div id="loadingView">
+    <div class="spinner"></div>
+    <h2>LINE 驗證中</h2>
+    <p>請稍候…</p>
+  </div>
+  <div id="successView" style="display:none;">
+    <div class="icon">
+      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#3d5a3e" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+    <h2>登入成功！</h2>
+    <p>正在返回活動頁面…</p>
+  </div>
+  <div id="errorView" style="display:none;">
+    <h2>登入失敗</h2>
+    <p class="err" id="errMsg"></p>
+    <p style="margin-top:12px;font-size:13px;">
+      <a href="./index.html" style="color:#3d5a3e;">← 返回活動頁面</a>
+    </p>
+  </div>
+</div>
+
+<script>
+const GAS_URL       = 'https://script.google.com/macros/s/AKfycbxWwieJD31_Or6FNdH6LHNY07hWepbKBpjvBb4Co3wYtX0QqpieDJoTxKKICMUIHb660w/exec';
+const LINE_REDIRECT = 'https://easonfuns.github.io/class/callback.html';
+
+async function main() {
+  const params = new URLSearchParams(window.location.search);
+  const code   = params.get('code');
+  const state  = params.get('state');
+  const error  = params.get('error');
+
+  if (error) { showError('LINE 授權被取消：' + error); return; }
+  if (!code)  { showError('未收到授權碼，請重新嘗試'); return; }
+
+  // 驗證 state
+  const savedState = sessionStorage.getItem('line_state');
+  if (state !== savedState) { showError('安全驗證失敗，請重新嘗試'); return; }
+
+  try {
+    // 透過 Apps Script 換取 profile（避免 CORS 問題）
+    const res  = await fetch(GAS_URL + '?' + new URLSearchParams({
+      action:       'lineCallback',
+      code,
+      redirectUri:  LINE_REDIRECT
+    }).toString());
+    const data = await res.json();
+
+    if (!data.success) { showError(data.error || '取得 LINE 資料失敗'); return; }
+
+    const profile = data.profile; // { userId, displayName, pictureUrl }
+
+    // 存到 sessionStorage，回到 index.html 後讀取
+    sessionStorage.setItem('line_profile', JSON.stringify(profile));
+    sessionStorage.removeItem('line_state');
+
+    document.getElementById('loadingView').style.display = 'none';
+    document.getElementById('successView').style.display = 'block';
+
+    // 返回活動頁
+    setTimeout(() => {
+      window.location.href = './index.html';
+    }, 800);
+
+  } catch(err) {
+    showError('網路錯誤：' + err.message);
+  }
+}
+
+function showError(msg) {
+  document.getElementById('loadingView').style.display = 'none';
+  document.getElementById('errorView').style.display   = 'block';
+  document.getElementById('errMsg').textContent        = msg;
+}
+
+main();
+</script>
+</body>
+</html>
