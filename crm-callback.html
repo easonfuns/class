@@ -52,7 +52,7 @@ async function main() {
   if (error) { showError('LINE 授權被取消'); return; }
   if (!code)  { showError('未收到授權碼，請重新嘗試'); return; }
 
-  const savedState = sessionStorage.getItem('crm_line_state');
+  const savedState = sessionStorage.getItem('crm_line_state') || localStorage.getItem('crm_line_state');
   if (state !== savedState) { showError('安全驗證失敗，請重新嘗試'); return; }
 
   try {
@@ -61,7 +61,9 @@ async function main() {
     if (!data.success) { showError(data.error || '取得 LINE 資料失敗'); return; }
 
     sessionStorage.setItem('crm_profile', JSON.stringify(data.profile));
+    localStorage.setItem('crm_profile', JSON.stringify(data.profile));
     sessionStorage.removeItem('crm_line_state');
+    localStorage.removeItem('crm_line_state');
 
     document.getElementById('loadingView').style.display = 'none';
     document.getElementById('successView').style.display = 'block';

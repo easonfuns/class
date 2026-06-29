@@ -83,7 +83,7 @@ async function main() {
   if (!code)  { showError('未收到授權碼，請重新嘗試'); return; }
 
   // 驗證 state
-  const savedState = sessionStorage.getItem('line_state');
+  const savedState = sessionStorage.getItem('line_state') || localStorage.getItem('line_state');
   if (state !== savedState) { showError('安全驗證失敗，請重新嘗試'); return; }
 
   try {
@@ -99,9 +99,11 @@ async function main() {
 
     const profile = data.profile; // { userId, displayName, pictureUrl }
 
-    // 存到 sessionStorage，回到 index.html 後讀取
+    // 同時存到 localStorage 和 sessionStorage（LINE 瀏覽器會清空 sessionStorage）
     sessionStorage.setItem('line_profile', JSON.stringify(profile));
+    localStorage.setItem('line_profile', JSON.stringify(profile));
     sessionStorage.removeItem('line_state');
+    localStorage.removeItem('line_state');
 
     document.getElementById('loadingView').style.display = 'none';
     document.getElementById('successView').style.display = 'block';

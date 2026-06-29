@@ -720,10 +720,12 @@ const LINE_REDIRECT  = 'https://easonfuns.github.io/class/callback.html';
 let lineProfile = null; // { userId, displayName, pictureUrl }
 
 function startLineLogin() {
-  // 把目前活動 ID 存起來，callback 回來後繼續
+  // 把目前活動 ID 存起來，callback 回來後繼續（localStorage 避免 LINE 瀏覽器清空）
+  localStorage.setItem('pendingEventId', currentEvent ? currentEvent.id : '');
   sessionStorage.setItem('pendingEventId', currentEvent ? currentEvent.id : '');
   const state    = Math.random().toString(36).substring(2);
   const nonce    = Math.random().toString(36).substring(2);
+  localStorage.setItem('line_state', state);
   sessionStorage.setItem('line_state', state);
   const params = new URLSearchParams({
     response_type: 'code',
@@ -946,11 +948,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 (function checkLineCallback() {
-  const profile = sessionStorage.getItem('line_profile');
-  const eventId = sessionStorage.getItem('pendingEventId');
+  const profile = sessionStorage.getItem('line_profile') || localStorage.getItem('line_profile');
+  const eventId = sessionStorage.getItem('pendingEventId') || localStorage.getItem('pendingEventId');
   if (profile && eventId) {
     sessionStorage.removeItem('line_profile');
+    localStorage.removeItem('line_profile');
     sessionStorage.removeItem('pendingEventId');
+    localStorage.removeItem('pendingEventId');
     lineProfile = JSON.parse(profile);
     loadPicker().then(() => {
       const ev = cachedEvents.find(e => String(e.id) === String(eventId));

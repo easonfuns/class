@@ -197,9 +197,10 @@ let currentProfile = null;
 // ── 初始化 ──
 async function init() {
   // 從 callback 回來後取得 profile
-  const stored = sessionStorage.getItem('crm_profile');
+  const stored = sessionStorage.getItem('crm_profile') || localStorage.getItem('crm_profile');
   if (stored) {
     sessionStorage.removeItem('crm_profile');
+    localStorage.removeItem('crm_profile');
     currentProfile = JSON.parse(stored);
     sessionStorage.setItem('crm_logged_in', JSON.stringify(currentProfile));
     await loadCRM();
@@ -221,6 +222,7 @@ async function init() {
 // ── LINE Login ──
 function startLineLogin() {
   const state = Math.random().toString(36).substring(2);
+  localStorage.setItem('crm_line_state', state);
   sessionStorage.setItem('crm_line_state', state);
   const params = new URLSearchParams({
     response_type: 'code',
