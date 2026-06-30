@@ -585,7 +585,7 @@
         <input type="text" id="inviterInput" placeholder="請輸入邀請您的人員姓名">
       </div>
 
-      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()" style="display:none;">確認登入 →</button>
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()" style="display:none;">確認報名 →</button>
     </div>
 
     <div id="successSection" style="display:none;">
@@ -840,7 +840,7 @@ async function handleSubmit() {
     })
   }).catch(() => {});
 
-  btn.textContent = '確認登入 →';
+  btn.textContent = '確認報名 →';
   btn.disabled = false;
 
   const datetimeStr = formatDisplay(currentEvent.date, currentEvent.time);
