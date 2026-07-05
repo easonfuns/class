@@ -751,7 +751,7 @@ function renderManagers() {
 
 async function toggleApprove(lineUserId, rowIndex, currentApproved) {
   const newApproved = !currentApproved;
-  await sheetsPost({ action: 'approveManager', rowIndex, approved: newApproved });
+  await sheetsPost({ action: 'approveManager', lineUserId, rowIndex, approved: newApproved });
   const m = cachedManagers.find(m => m.lineUserId === lineUserId);
   if (m) m.approved = newApproved;
   renderManagers();
