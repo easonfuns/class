@@ -197,10 +197,7 @@
     <div id="section-registrations" class="page-section">
       <div class="section-header">
         <h2 class="section-title">報名紀錄</h2>
-        <button class="btn btn-sm" onclick="exportCSV()">
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          匯出 CSV
-        </button>
+        <span style="font-size:12px;color:var(--ink-muted);">點各活動右上角可分別匯出該場次 CSV</span>
       </div>
       <div id="regContent"><div class="loading-state">載入中…</div></div>
     </div>
@@ -665,40 +662,89 @@ function renderRegistrations(regs) {
     groups[key].regs.push(r);
   });
 
-  document.getElementById('regContent').innerHTML = Object.entries(groups).map(([title,grp])=>`
+  // 快取分組後的資料，讓每個活動各自的匯出按鈕能取用
+  window.__regGroups = groups;
+
+  document.getElementById('regContent').innerHTML = Object.entries(groups).map(([title,grp])=>{
+    // ── 同活動內，「姓名＋身分」相同的只顯示一筆，多次出現時累計次數、取最新時間 ──
+    const dedupMap = new Map();
+    grp.regs.forEach(r=>{
+      const key = `${r.name||''}__${r.identity||''}`;
+      if (!dedupMap.has(key)) {
+        dedupMap.set(key, { ...r, count: 1 });
+      } else {
+        const existing = dedupMap.get(key);
+        existing.count += 1;
+        // 保留較新的登入時間、邀請人（避免舊資料蓋掉有值的邀請人欄位）
+        if (r.loginTime && (!existing.loginTime || r.loginTime > existing.loginTime)) {
+          existing.loginTime = r.loginTime;
+        }
+        if (r.inviter && !existing.inviter) existing.inviter = r.inviter;
+      }
+    });
+    const dedupedRegs = Array.from(dedupMap.values());
+
+    return `
     <div class="event-card" style="margin-bottom:16px">
       <div class="event-header open" style="cursor:default;border-bottom-color:var(--line);background:var(--paper-warm);">
         <span class="event-title-text">${escHtml(title)}</span>
         <span class="event-meta-text">${grp.date||''} ${grp.time||''}</span>
-        <span class="event-meta-text">${grp.regs.length} 人</span>
+        <span class="event-meta-text">${dedupedRegs.length} 人</span>
+        <button class="btn btn-sm" style="margin-left:auto;" onclick="exportEventCSV('${escHtml(title).replace(/'/g,"\\'")}')">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          匯出本場 CSV
+        </button>
       </div>
       <div class="event-body open">
         <table class="reg-table">
-          <thead><tr><th>姓名</th><th>身分</th><th>邀請人</th><th>時間</th></tr></thead>
-          <tbody>${grp.regs.map(r=>`
+          <thead><tr><th>姓名</th><th>身分</th><th>邀請人</th><th>次數</th><th>時間</th></tr></thead>
+          <tbody>${dedupedRegs.map(r=>`
             <tr>
               <td style="font-weight:500">${escHtml(r.name||'')}</td>
               <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity||''}</span></td>
               <td style="color:var(--ink-soft)">${escHtml(r.inviter||'')}</td>
+              <td style="color:var(--ink-muted)">${r.count > 1 ? `×${r.count}` : ''}</td>
               <td style="color:var(--ink-muted)">${r.loginTime||''}</td>
             </tr>`).join('')}
           </tbody>
         </table>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
-async function exportCSV() {
-  const data = await sheetsGet({action:'getRegistrations'});
-  const regs = data.registrations||[];
-  const rows = [['活動名稱','日期','時間','姓名','身分','邀請人','登入時間']];
+async function exportEventCSV(eventTitle) {
+  const groups = window.__regGroups || {};
+  const grp = groups[eventTitle];
+  if (!grp) { alert('找不到這場活動的資料'); return; }
+
   const idMap={health:'健管師',guest:'受邀來賓',staff:'行政/工作人員',npo:'社區據點/NPO協會'};
-  regs.forEach(r=>rows.push([r.eventTitle,r.eventDate,r.eventTime,r.name,idMap[r.identity]||r.identity,r.inviter,r.loginTime]));
+
+  // 匯出時同樣套用「姓名＋身分」去重複的邏輯，跟畫面上看到的一致
+  const dedupMap = new Map();
+  grp.regs.forEach(r=>{
+    const key = `${r.name||''}__${r.identity||''}`;
+    if (!dedupMap.has(key)) {
+      dedupMap.set(key, { ...r, count: 1 });
+    } else {
+      const existing = dedupMap.get(key);
+      existing.count += 1;
+      if (r.loginTime && (!existing.loginTime || r.loginTime > existing.loginTime)) {
+        existing.loginTime = r.loginTime;
+      }
+      if (r.inviter && !existing.inviter) existing.inviter = r.inviter;
+    }
+  });
+  const dedupedRegs = Array.from(dedupMap.values());
+
+  const rows = [['活動名稱','日期','時間','姓名','身分','邀請人','次數','登入時間']];
+  dedupedRegs.forEach(r=>rows.push([eventTitle, grp.date, grp.time, r.name, idMap[r.identity]||r.identity, r.inviter, r.count, r.loginTime]));
+
   const csv  = rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href=url; a.download='報名紀錄.csv'; a.click();
+  a.href=url; a.download=`報名紀錄_${eventTitle}.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 
