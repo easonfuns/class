@@ -675,32 +675,35 @@ function renderRegistrations(regs) {
       } else {
         const existing = dedupMap.get(key);
         existing.count += 1;
-        // 保留較新的登入時間、邀請人（避免舊資料蓋掉有值的邀請人欄位）
+        // 保留較新的登入時間、邀請人、Zoom名稱（避免舊資料蓋掉有值的欄位）
         if (r.loginTime && (!existing.loginTime || r.loginTime > existing.loginTime)) {
           existing.loginTime = r.loginTime;
         }
         if (r.inviter && !existing.inviter) existing.inviter = r.inviter;
+        if (r.zoomName && !existing.zoomName) existing.zoomName = r.zoomName;
       }
     });
     const dedupedRegs = Array.from(dedupMap.values());
+    const safeKey = escHtml(groupKey).replace(/'/g,"\\'");
 
     return `
     <div class="event-card" style="margin-bottom:16px">
-      <div class="event-header open" style="cursor:default;border-bottom-color:var(--line);background:var(--paper-warm);">
+      <div class="event-header" id="reg-header-${safeKey}" onclick="toggleRegGroup('${safeKey}')">
         <span class="event-title-text">${escHtml(grp.title)}</span>
         <span class="event-meta-text">${grp.date||''} ${grp.time||''}</span>
         <span class="event-meta-text">${dedupedRegs.length} 人</span>
-        <button class="btn btn-sm" style="margin-left:auto;" onclick="exportEventCSV('${escHtml(groupKey).replace(/'/g,"\\'")}')">
+        <button class="btn btn-sm" style="margin-left:auto;" onclick="event.stopPropagation();exportEventCSV('${safeKey}')">
           <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           匯出本場 CSV
         </button>
       </div>
-      <div class="event-body open">
+      <div class="event-body" id="reg-body-${safeKey}">
         <table class="reg-table">
-          <thead><tr><th>姓名</th><th>身分</th><th>邀請人</th><th>次數</th><th>時間</th></tr></thead>
+          <thead><tr><th>姓名</th><th>Zoom名稱</th><th>身分</th><th>邀請人</th><th>次數</th><th>時間</th></tr></thead>
           <tbody>${dedupedRegs.map(r=>`
             <tr>
               <td style="font-weight:500">${escHtml(r.name||'')}</td>
+              <td style="color:var(--ink-soft)">${escHtml(r.zoomName||'')}</td>
               <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity||''}</span></td>
               <td style="color:var(--ink-soft)">${escHtml(r.inviter||'')}</td>
               <td style="color:var(--ink-muted)">${r.count > 1 ? `×${r.count}` : ''}</td>
@@ -711,6 +714,13 @@ function renderRegistrations(regs) {
       </div>
     </div>`;
   }).join('');
+}
+
+function toggleRegGroup(safeKey) {
+  const header = document.getElementById(`reg-header-${safeKey}`);
+  const body   = document.getElementById(`reg-body-${safeKey}`);
+  header.classList.toggle('open');
+  body.classList.toggle('open');
 }
 
 async function exportEventCSV(groupKey) {
@@ -734,12 +744,13 @@ async function exportEventCSV(groupKey) {
         existing.loginTime = r.loginTime;
       }
       if (r.inviter && !existing.inviter) existing.inviter = r.inviter;
+      if (r.zoomName && !existing.zoomName) existing.zoomName = r.zoomName;
     }
   });
   const dedupedRegs = Array.from(dedupMap.values());
 
-  const rows = [['活動名稱','日期','時間','姓名','身分','邀請人','次數','登入時間']];
-  dedupedRegs.forEach(r=>rows.push([eventTitle, grp.date, grp.time, r.name, idMap[r.identity]||r.identity, r.inviter, r.count, r.loginTime]));
+  const rows = [['活動名稱','日期','時間','姓名','Zoom名稱','身分','邀請人','次數','登入時間']];
+  dedupedRegs.forEach(r=>rows.push([eventTitle, grp.date, grp.time, r.name, r.zoomName, idMap[r.identity]||r.identity, r.inviter, r.count, r.loginTime]));
 
   const csv  = rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
