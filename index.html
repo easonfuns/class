@@ -574,6 +574,11 @@
             </div>
           </div>
           <button style="margin-top:10px;font-size:12px;color:var(--ink-muted);background:none;border:none;cursor:pointer;text-decoration:underline;" onclick="clearLineLogin()">更換帳號</button>
+
+          <div class="field" style="margin-top:16px;text-align:left;">
+            <label>Zoom 顯示名字 <span style="color:var(--accent);font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;">必填</span></label>
+            <input type="text" id="zoomNameHealthInput" placeholder="請輸入您進入 Zoom 時顯示的名字">
+          </div>
         </div>
       </div>
 
@@ -581,6 +586,11 @@
       <div class="field" id="nameField" style="display:none;">
         <label>姓名</label>
         <input type="text" id="nameInput" placeholder="請輸入您的姓名">
+      </div>
+
+      <div class="field" id="zoomNameField" style="display:none;">
+        <label>Zoom 顯示名字 <span style="color:var(--accent);font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;">必填</span></label>
+        <input type="text" id="zoomNameInput" placeholder="請輸入您進入 Zoom 時顯示的名字">
       </div>
 
       <div class="field" id="inviterField" style="display:none;">
@@ -791,9 +801,13 @@ function selectId(el) {
   const isHealth  = selectedId === 'health';
   const isGuest   = selectedId === 'guest';
 
-  // 健管師：顯示 LINE 登入，隱藏姓名欄
+  // 健管師：顯示 LINE 登入，隱藏姓名欄（Zoom 名字改放在 LINE 登入區塊內）
   document.getElementById('lineLoginArea').style.display = isHealth ? 'block' : 'none';
   document.getElementById('nameField').style.display     = isHealth ? 'none'  : 'block';
+
+  // 非健管師（受邀來賓／行政工作人員／社區據點NPO）：顯示 Zoom 名字欄位
+  document.getElementById('zoomNameField').style.display = isHealth ? 'none' : 'block';
+  if (isHealth) document.getElementById('zoomNameInput').value = '';
 
   // 邀請人：只有受邀來賓才顯示
   document.getElementById('inviterField').style.display = isGuest ? 'block' : 'none';
@@ -813,15 +827,20 @@ async function handleSubmit() {
   let name = '';
   let lineUserId = '';
   let linePicture = '';
+  let zoomName = '';
 
   if (isHealth) {
     if (!lineProfile) { showError('請先使用 LINE 登入'); return; }
     name        = lineProfile.displayName;
     lineUserId  = lineProfile.userId;
     linePicture = lineProfile.pictureUrl || '';
+    zoomName    = document.getElementById('zoomNameHealthInput').value.trim();
+    if (!zoomName) { showError('請填寫 Zoom 顯示名字'); return; }
   } else {
     name = document.getElementById('nameInput').value.trim();
     if (!name) { showError('請填寫您的姓名'); return; }
+    zoomName = document.getElementById('zoomNameInput').value.trim();
+    if (!zoomName) { showError('請填寫 Zoom 顯示名字'); return; }
   }
 
   if (isGuest) {
@@ -848,6 +867,7 @@ async function handleSubmit() {
       eventDate:   currentEvent.date  || '',
       eventTime:   currentEvent.time  || '',
       name,
+      zoomName,
       identity:    idMap[selectedId] || selectedId,
       inviter:     inviterVal,
       loginTime,
@@ -879,8 +899,11 @@ function resetForm() {
   lineProfile = null;
   document.getElementById('nameInput').value    = '';
   document.getElementById('inviterInput').value = '';
+  document.getElementById('zoomNameInput').value = '';
+  document.getElementById('zoomNameHealthInput').value = '';
   document.getElementById('inviterField').style.display  = 'none';
   document.getElementById('nameField').style.display     = 'none';
+  document.getElementById('zoomNameField').style.display = 'none';
   document.getElementById('lineLoginArea').style.display = 'none';
   document.getElementById('submitBtn').style.display     = 'none';
   document.getElementById('lineNotLoggedIn').style.display = 'block';
