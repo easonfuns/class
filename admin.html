@@ -654,19 +654,19 @@ function renderRegistrations(regs) {
     return;
   }
 
-  // 依活動分組
+  // 依「活動名稱＋日期」分組，避免每月重複課名時互相混淆
   const groups={};
   regs.forEach(r=>{
-    const key=r.eventTitle||'未知活動';
-    if (!groups[key]) groups[key]={date:r.eventDate,time:r.eventTime,regs:[]};
-    groups[key].regs.push(r);
+    const groupKey = `${r.eventTitle||'未知活動'}__${r.eventDate||''}`;
+    if (!groups[groupKey]) groups[groupKey]={title:r.eventTitle||'未知活動',date:r.eventDate,time:r.eventTime,regs:[]};
+    groups[groupKey].regs.push(r);
   });
 
   // 快取分組後的資料，讓每個活動各自的匯出按鈕能取用
   window.__regGroups = groups;
 
-  document.getElementById('regContent').innerHTML = Object.entries(groups).map(([title,grp])=>{
-    // ── 同活動內，「姓名＋身分」相同的只顯示一筆，多次出現時累計次數、取最新時間 ──
+  document.getElementById('regContent').innerHTML = Object.entries(groups).map(([groupKey,grp])=>{
+    // ── 同活動同日期內，「姓名＋身分」相同的只顯示一筆，多次出現時累計次數、取最新時間 ──
     const dedupMap = new Map();
     grp.regs.forEach(r=>{
       const key = `${r.name||''}__${r.identity||''}`;
@@ -687,10 +687,10 @@ function renderRegistrations(regs) {
     return `
     <div class="event-card" style="margin-bottom:16px">
       <div class="event-header open" style="cursor:default;border-bottom-color:var(--line);background:var(--paper-warm);">
-        <span class="event-title-text">${escHtml(title)}</span>
+        <span class="event-title-text">${escHtml(grp.title)}</span>
         <span class="event-meta-text">${grp.date||''} ${grp.time||''}</span>
         <span class="event-meta-text">${dedupedRegs.length} 人</span>
-        <button class="btn btn-sm" style="margin-left:auto;" onclick="exportEventCSV('${escHtml(title).replace(/'/g,"\\'")}')">
+        <button class="btn btn-sm" style="margin-left:auto;" onclick="exportEventCSV('${escHtml(groupKey).replace(/'/g,"\\'")}')">
           <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           匯出本場 CSV
         </button>
@@ -713,10 +713,11 @@ function renderRegistrations(regs) {
   }).join('');
 }
 
-async function exportEventCSV(eventTitle) {
+async function exportEventCSV(groupKey) {
   const groups = window.__regGroups || {};
-  const grp = groups[eventTitle];
+  const grp = groups[groupKey];
   if (!grp) { alert('找不到這場活動的資料'); return; }
+  const eventTitle = grp.title;
 
   const idMap={health:'健管師',guest:'受邀來賓',staff:'行政/工作人員',npo:'社區據點/NPO協會'};
 
