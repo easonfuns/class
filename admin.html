@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>管理後台 — 週二線上課程</title>
+<title>線上課程來賓入口</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -11,854 +11,140 @@
     --ink: #1c1c1e; --ink-soft: #48484a; --ink-muted: #8e8e93;
     --paper: #faf9f7; --paper-warm: #f2efe9; --paper-dark: #e8e4dc;
     --accent: #3d5a3e; --accent-light: #e8f0e8; --accent-mid: #6b9e6c;
-    --danger: #c0392b; --danger-light: #fdf2f2;
-    --line: rgba(0,0,0,0.1); --radius: 4px; --radius-lg: 12px; --sidebar: 220px;
+    --line: rgba(0,0,0,0.1); --radius: 4px; --radius-lg: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper-warm); color: var(--ink); min-height: 100vh; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
 
-  .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--paper); }
-  .login-box { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 48px 40px; width: 360px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
-  .login-title { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
-  .login-sub { font-size: 13px; color: var(--ink-muted); margin-bottom: 28px; }
-  .login-field { margin-bottom: 16px; }
-  .login-field label { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
-  .login-field input { width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-  .login-field input:focus { border-color: var(--accent-mid); box-shadow: 0 0 0 3px rgba(107,158,108,0.15); }
-  .login-btn { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
-  .login-btn:hover { background: #2e4530; }
-  .login-error { font-size: 13px; color: var(--danger); margin-top: 10px; text-align: center; }
+  /* decorative background circles, consistent with site style */
+  .bg-circle {
+    position: fixed;
+    border-radius: 50%;
+    border: 1px solid rgba(61,90,62,0.15);
+    pointer-events: none;
+  }
+  .bg-circle.c1 { width: 420px; height: 420px; top: -140px; left: -140px; background: rgba(61,90,62,0.06); }
+  .bg-circle.c2 { width: 300px; height: 300px; bottom: -100px; right: -100px; background: rgba(107,158,108,0.08); }
+  .bg-circle.c3 { width: 160px; height: 160px; top: 20%; right: 8%; border-color: rgba(61,90,62,0.1); }
 
-  .admin-layout { display: grid; grid-template-columns: var(--sidebar) 1fr; min-height: 100vh; }
-  .sidebar { background: #fff; border-right: 1px solid var(--line); padding: 24px 0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
-  .sidebar-brand { padding: 0 20px 24px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
-  .sidebar-brand h1 { font-family: 'Noto Serif TC', serif; font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.4; }
-  .sidebar-brand p { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; color: var(--ink-soft); cursor: pointer; transition: background 0.12s, color 0.12s; }
-  .nav-item:hover { background: var(--paper-warm); color: var(--ink); }
-  .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 500; border-right: 2px solid var(--accent); }
-  .sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--line); }
-  .logout-btn { font-size: 13px; color: var(--ink-muted); cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
-  .logout-btn:hover { color: var(--danger); }
+  .card {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    max-width: 460px;
+    width: 100%;
+    padding: 44px 32px 36px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(28,28,30,0.08);
+  }
 
-  .main-content { padding: 32px 36px; max-width: 900px; }
-  .page-section { display: none; }
-  .page-section.active { display: block; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-  .section-title { font-family: 'Noto Serif TC', serif; font-size: 20px; font-weight: 700; }
+  .icon-badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+  }
 
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink); transition: all 0.12s; white-space: nowrap; text-decoration: none; }
-  .btn:hover { background: var(--paper-warm); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #2e4530; }
-  .btn-danger { color: var(--danger); border-color: rgba(192,57,43,0.3); background: var(--danger-light); }
-  .btn-danger:hover { background: #fce8e8; }
-  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
 
-  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
-  .stat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 16px 20px; }
-  .stat-num { font-family: 'Noto Serif TC', serif; font-size: 28px; font-weight: 700; color: var(--ink); }
-  .stat-label { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  p.desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 28px;
+  }
 
-  .event-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 12px; }
-  .event-header { padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid transparent; cursor: pointer; transition: background 0.12s; flex-wrap: wrap; }
-  .event-header:hover { background: var(--paper-warm); }
-  .event-header.open { border-bottom-color: var(--line); background: var(--paper-warm); }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .status-dot.active { background: #3d7a40; box-shadow: 0 0 0 3px rgba(61,122,64,0.15); }
-  .status-dot.inactive { background: var(--ink-muted); }
-  .event-title-text { font-size: 15px; font-weight: 500; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .event-meta-text { font-size: 12px; color: var(--ink-muted); flex-shrink: 0; }
-  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; flex-shrink: 0; }
-  .badge-active { background: var(--accent-light); color: var(--accent); }
-  .badge-inactive { background: var(--paper-dark); color: var(--ink-muted); }
-  .event-body { padding: 20px; display: none; }
-  .event-body.open { display: block; }
+  .new-url-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow: 0 8px 20px rgba(61,90,62,0.25);
+  }
+  .new-url-btn:hover { background: #34503a; transform: translateY(-1px); box-shadow: 0 10px 24px rgba(61,90,62,0.32); }
+  .new-url-btn:active { transform: translateY(0); }
 
-  .dm-upload-area { display: flex; gap: 20px; margin-bottom: 20px; align-items: flex-start; flex-wrap: wrap; }
-  .dm-preview { width: 100px; aspect-ratio: 2/3; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--paper-warm); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--ink-muted); text-align: center; flex-shrink: 0; }
-  .dm-preview img { width: 100%; height: 100%; object-fit: cover; }
-  .dm-upload-controls { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; flex: 1; min-width: 180px; }
-  input[type="file"] { display: none; }
-  .upload-hint { font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
-  .upload-progress { font-size: 12px; color: var(--accent); display: none; }
+  .url-hint {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--ink-muted);
+    word-break: break-all;
+  }
 
-  .field { margin-bottom: 16px; }
-  .field label { display: block; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
-  .field input, .field textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius); font-family: 'Noto Sans TC', sans-serif; font-size: 14px; color: var(--ink); background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-  .field input:focus, .field textarea:focus { border-color: var(--accent-mid); box-shadow: 0 0 0 3px rgba(107,158,108,0.12); }
-  .field textarea { resize: vertical; min-height: 80px; }
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  .reg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .reg-table th { text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); padding: 0 0 10px; border-bottom: 1px solid var(--line); }
-  .reg-table td { padding: 10px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
-  .reg-table tr:last-child td { border-bottom: none; }
-  .id-tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-  .id-health { background: var(--accent-light); color: var(--accent); }
-  .id-guest  { background: #eeedfe; color: #534AB7; }
-  .id-staff  { background: var(--paper-dark); color: var(--ink-soft); }
-  .id-npo    { background: #faeeda; color: #633806; }
-
-  .event-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 16px; }
-
-  .settings-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; }
-  .settings-card h3 { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .settings-card p { font-size: 13px; color: var(--ink-muted); margin-bottom: 16px; line-height: 1.6; }
-
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
-  .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 32px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 48px rgba(0,0,0,0.15); }
-  .modal-title { font-family: 'Noto Serif TC', serif; font-size: 18px; font-weight: 700; margin-bottom: 24px; }
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
-
-  .empty-state { text-align: center; padding: 48px 24px; color: var(--ink-muted); font-size: 14px; line-height: 1.7; }
-  .loading-state { text-align: center; padding: 48px 24px; color: var(--ink-muted); font-size: 14px; }
-
-  .manager-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .manager-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--line); flex-shrink: 0; }
-  .manager-avatar-placeholder { width: 44px; height: 44px; border-radius: 50%; background: var(--paper-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .manager-info { flex: 1; min-width: 0; }
-  .manager-name { font-size: 15px; font-weight: 500; }
-  .manager-meta { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
-  .approve-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--line); transition: all 0.12s; font-family: inherit; flex-shrink: 0; }
-  .approve-btn.approved { background: var(--accent-light); border-color: var(--accent-mid); color: var(--accent); }
-  .approve-btn.pending  { background: var(--paper-warm); border-color: var(--line); color: var(--ink-muted); }
-  .view-records-btn { display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border-radius: var(--radius); font-size: 12px; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink-soft); font-family: inherit; flex-shrink: 0; }
-  .view-records-btn:hover { background: var(--paper-warm); }
-  .modal-rec-row { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .modal-rec-row:last-child { border-bottom: none; }
-  .save-toast { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff; padding: 10px 18px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 500; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 9999; }
-  .save-toast.show { opacity: 1; transform: translateY(0); }
-  .err-toast { background: var(--danger); }
+  .footer-note {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.7;
+  }
 </style>
 </head>
 <body>
 
-<!-- Login -->
-<div id="loginScreen" class="login-screen">
-  <div class="login-box">
-    <h1 class="login-title">管理後台</h1>
-    <p class="login-sub">週二線上課程 管理員專區</p>
-    <div class="login-field">
-      <label>密碼</label>
-      <input type="password" id="pwInput" placeholder="請輸入管理密碼" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="login-btn" onclick="doLogin()">登入</button>
-    <p class="login-error" id="loginError"></p>
+<div class="bg-circle c1"></div>
+<div class="bg-circle c2"></div>
+<div class="bg-circle c3"></div>
+
+<div class="card">
+  <div class="icon-badge">📍</div>
+  <h1>報名網站換地方囉！<br>請至我們的新網站</h1>
+  <p class="desc">為了提供更穩定、更完整的服務，線上課程報名系統已經搬家了。<br>請點擊下方按鈕前往新網站繼續報名。</p>
+
+  <a class="new-url-btn" href="https://class-b0b02.web.app/" target="_self">
+    前往新網站 →
+  </a>
+  <div class="url-hint">https://class-b0b02.web.app/</div>
+
+  <div class="footer-note">
+    社團法人中華恩典國際健康管理協會<br>
+    若有任何問題，歡迎聯繫協會工作人員
   </div>
 </div>
-
-<!-- Admin -->
-<div id="adminLayout" class="admin-layout" style="display:none;">
-  <div class="sidebar">
-    <div class="sidebar-brand">
-      <h1>週二線上課程</h1>
-      <p>管理後台</p>
-    </div>
-    <div class="nav-item active" onclick="showSection('events')" id="nav-events">
-      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      活動列表
-    </div>
-    <div class="nav-item" onclick="showSection('registrations')" id="nav-registrations">
-      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      報名紀錄
-    </div>
-    <div class="nav-item" onclick="showSection('managers')" id="nav-managers">
-      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      健管師名冊
-    </div>
-    <div class="nav-item" onclick="showSection('settings')" id="nav-settings">
-      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-      系統設定
-    </div>
-    <div class="sidebar-footer">
-      <button class="logout-btn" onclick="doLogout()">← 登出</button>
-    </div>
-  </div>
-
-  <div class="main-content">
-    <div id="section-events" class="page-section active">
-      <div class="section-header">
-        <h2 class="section-title">活動列表</h2>
-        <button class="btn btn-primary" onclick="openNewModal()">
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          新增活動
-        </button>
-      </div>
-      <div class="stats-row" id="statsRow">
-        <div class="stat-card"><div class="stat-num">—</div><div class="stat-label">活動總數</div></div>
-        <div class="stat-card"><div class="stat-num">—</div><div class="stat-label">上架中</div></div>
-        <div class="stat-card"><div class="stat-num">—</div><div class="stat-label">累計報名</div></div>
-      </div>
-      <div id="eventsList"><div class="loading-state">載入中…</div></div>
-    </div>
-
-    <div id="section-registrations" class="page-section">
-      <div class="section-header">
-        <h2 class="section-title">報名紀錄</h2>
-        <span style="font-size:12px;color:var(--ink-muted);">點各活動右上角可分別匯出該場次 CSV</span>
-      </div>
-      <div id="regContent"><div class="loading-state">載入中…</div></div>
-    </div>
-
-    <div id="section-managers" class="page-section">
-      <div class="section-header">
-        <h2 class="section-title">健管師名冊</h2>
-        <button class="btn btn-sm" onclick="loadManagers()">
-          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.68-2.65"/></svg>
-          重新整理
-        </button>
-      </div>
-      <div id="managersList"><div class="loading-state">載入中…</div></div>
-
-      <!-- 個別健管師紀錄 modal -->
-      <div id="managerModal" class="modal-overlay" style="display:none;" onclick="closeManagerModal()">
-        <div class="modal-box" onclick="event.stopPropagation()" style="max-width:600px;">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
-            <img id="modalAvatar" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--accent-mid);" src="" alt=""
-              onerror="this.style.display='none'">
-            <div>
-              <h3 id="modalName" style="font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;"></h3>
-              <p id="modalMeta" style="font-size:12px;color:var(--ink-muted);margin-top:2px;"></p>
-            </div>
-          </div>
-          <div id="modalRecords"></div>
-          <div style="margin-top:20px;text-align:right;">
-            <button class="btn" onclick="closeManagerModal()">關閉</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="section-settings" class="page-section">
-      <div class="section-header"><h2 class="section-title">系統設定</h2></div>
-      <div class="settings-card">
-        <h3>Cloudinary 圖片上傳設定</h3>
-        <p>DM 圖片上傳需要免費的 Cloudinary 帳號。<br>
-          步驟：1. 前往 <a href="https://cloudinary.com" target="_blank" style="color:var(--accent)">cloudinary.com</a> 免費註冊<br>
-          2. 進入後台 → Settings → Upload → 新增一個 Unsigned Upload Preset<br>
-          3. 將 Cloud Name 與 Preset Name 填入下方並儲存</p>
-        <div class="field-row">
-          <div class="field"><label>Cloud Name</label><input type="text" id="cloudNameInput" placeholder="your-cloud-name"></div>
-          <div class="field"><label>Upload Preset</label><input type="text" id="presetInput" placeholder="your-preset-name"></div>
-        </div>
-        <button class="btn btn-primary" onclick="saveCloudinary()">儲存設定</button>
-        <span id="cdnSaved" style="font-size:13px;color:var(--accent);margin-left:10px;display:none;">✓ 已儲存</span>
-      </div>
-      <div class="settings-card">
-        <h3>變更管理密碼</h3>
-        <p>密碼儲存在瀏覽器本機，建議每台管理用電腦都設定一次。</p>
-        <div class="field-row">
-          <div class="field"><label>新密碼</label><input type="password" id="newPw1" placeholder="請輸入新密碼"></div>
-          <div class="field"><label>確認新密碼</label><input type="password" id="newPw2" placeholder="請再輸入一次"></div>
-        </div>
-        <button class="btn btn-primary" onclick="changePw()">變更密碼</button>
-        <span id="pwMsg" style="font-size:13px;margin-left:10px;display:none;"></span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- New Event Modal -->
-<div id="newModal" class="modal-overlay" style="display:none;" onclick="closeNewModal()">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <h2 class="modal-title">新增活動</h2>
-    <div class="field"><label>活動名稱</label><input type="text" id="newTitle" placeholder="例：2026.06.10 週二健管師線上課程"></div>
-    <div class="field-row">
-      <div class="field"><label>活動日期</label><input type="date" id="newDate"></div>
-      <div class="field"><label>活動時間</label><input type="time" id="newTime" value="19:00"></div>
-    </div>
-    <div class="field"><label>Zoom 連結</label><input type="text" id="newZoom" placeholder="https://zoom.us/j/..."></div>
-    <div class="field"><label>活動介紹文字</label><textarea id="newDesc" placeholder="請輸入本次活動說明..."></textarea></div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeNewModal()">取消</button>
-      <button class="btn btn-primary" id="createBtn" onclick="createNewEvent()">建立活動</button>
-    </div>
-  </div>
-</div>
-
-<div class="save-toast" id="toast"></div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxWwieJD31_Or6FNdH6LHNY07hWepbKBpjvBb4Co3wYtX0QqpieDJoTxKKICMUIHb660w/exec';
-
-// ── 日期時間格式化（Apps Script 已確保 yyyy-MM-dd 和 HH:mm）──
-function formatDisplay(date, time) {
-  let dateStr = '';
-  let timeStr = '';
-  if (date) {
-    const parts = String(date).trim().split('-');
-    if (parts.length === 3) {
-      const m = parseInt(parts[1], 10);
-      const d = parseInt(parts[2], 10);
-      dateStr = `${parts[0]} 年 ${m} 月 ${d} 日`;
-    }
-  }
-  if (time) {
-    const t = String(time).trim().substring(0, 5);
-    const col = t.indexOf(':');
-    if (col > 0) {
-      const h  = parseInt(t.substring(0, col), 10);
-      const mn = t.substring(col + 1);
-      timeStr = `${h < 12 ? '上午' : '下午'} ${h === 0 ? 12 : h > 12 ? h - 12 : h}:${mn}`;
-    }
-  }
-  return [dateStr, timeStr].filter(Boolean).join('　');
-}
-
-// input[type=date] 需要 yyyy-MM-dd，input[type=time] 需要 HH:mm
-// Apps Script 已確保格式，直接回傳即可
-function cleanDate(val) { return val ? String(val).trim().substring(0, 10) : ''; }
-function cleanTime(val) { return val ? String(val).trim().substring(0, 5) : ''; }
-
-
-// ── 密碼 (只有這個留在 localStorage) ──
-function getPassword() { return localStorage.getItem('adminPw') || '12345678'; }
-
-function doLogin() {
-  const pw = document.getElementById('pwInput').value;
-  if (pw === getPassword()) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminLayout').style.display = 'grid';
-    initAdmin();
-  } else {
-    document.getElementById('loginError').textContent = '密碼錯誤，請再試一次';
-  }
-}
-
-function doLogout() {
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('adminLayout').style.display = 'none';
-  document.getElementById('pwInput').value = '';
-  document.getElementById('loginError').textContent = '';
-  cachedEvents = [];
-}
-
-function changePw() {
-  const p1 = document.getElementById('newPw1').value;
-  const p2 = document.getElementById('newPw2').value;
-  const msg = document.getElementById('pwMsg');
-  if (!p1) { showInlineMsg(msg,'請輸入新密碼','var(--danger)'); return; }
-  if (p1!==p2) { showInlineMsg(msg,'兩次密碼不一致','var(--danger)'); return; }
-  localStorage.setItem('adminPw', p1);
-  showInlineMsg(msg,'✓ 密碼已變更','var(--accent)');
-  document.getElementById('newPw1').value='';
-  document.getElementById('newPw2').value='';
-}
-
-// ── Nav ──
-function showSection(name) {
-  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('section-'+name).classList.add('active');
-  document.getElementById('nav-'+name).classList.add('active');
-  if (name==='registrations') loadRegistrations();
-  if (name==='managers') loadManagers();
-}
-
-// ── Cloudinary settings (只存 localStorage，不敏感) ──
-function saveCloudinary() {
-  localStorage.setItem('cloudName', document.getElementById('cloudNameInput').value.trim());
-  localStorage.setItem('uploadPreset', document.getElementById('presetInput').value.trim());
-  showInlineMsg(document.getElementById('cdnSaved'),'✓ 已儲存','var(--accent)');
-}
-
-// ── 共用：呼叫 Sheets ──
-async function sheetsPost(payload) {
-  await fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-  });
-}
-
-async function sheetsGet(params) {
-  const url = GAS_URL + '?' + new URLSearchParams(params).toString();
-  const res  = await fetch(url);
-  return res.json();
-}
-
-// ── 活動資料 (從 Sheets) ──
-let cachedEvents  = [];
-let openEventId   = null;
-
-async function initAdmin() {
-  document.getElementById('cloudNameInput').value = localStorage.getItem('cloudName') || '';
-  document.getElementById('presetInput').value    = localStorage.getItem('uploadPreset') || '';
-  await loadEvents();
-}
-
-async function loadEvents() {
-  document.getElementById('eventsList').innerHTML = '<div class="loading-state">載入中…</div>';
-  try {
-    const data = await sheetsGet({ action: 'getEvents', all: '1' });
-    if (!data.success) throw new Error(data.error);
-    cachedEvents = data.events || [];
-    renderEvents();
-  } catch(err) {
-    document.getElementById('eventsList').innerHTML = `<div class="empty-state">載入失敗：${err.message}<br><button class="btn btn-sm" style="margin-top:12px" onclick="loadEvents()">重試</button></div>`;
-  }
-}
-
-function renderEvents() {
-  const total      = cachedEvents.length;
-  const activeCount = cachedEvents.filter(e=>e.active==='上架').length;
-  const totalRegs  = cachedEvents.reduce((s,e)=>s+(e.regCount||0),0);
-
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">活動總數</div></div>
-    <div class="stat-card"><div class="stat-num">${activeCount}</div><div class="stat-label">上架中</div></div>
-    <div class="stat-card"><div class="stat-num">${totalRegs}</div><div class="stat-label">累計報名</div></div>`;
-
-  if (total===0) {
-    document.getElementById('eventsList').innerHTML='<div class="empty-state">尚無活動，請點擊「新增活動」開始</div>';
-    return;
-  }
-
-  document.getElementById('eventsList').innerHTML = cachedEvents.map(ev=>{
-    const isActive = ev.active==='上架';
-    const meta = formatDisplay(cleanDate(ev.date), cleanTime(ev.time));
-    return `<div class="event-card">
-      <div class="event-header ${openEventId===ev.id?'open':''}" onclick="toggleEvent('${ev.id}')">
-        <div class="status-dot ${isActive?'active':'inactive'}"></div>
-        <span class="event-title-text">${escHtml(ev.title||'未命名活動')}</span>
-        <span class="event-meta-text">${meta}</span>
-        <span class="badge ${isActive?'badge-active':'badge-inactive'}">${isActive?'上架中':'已下架'}</span>
-      </div>
-      <div class="event-body ${openEventId===ev.id?'open':''}" id="eb-${ev.id}">
-        ${renderEventBody(ev)}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderEventBody(ev) {
-  const tagMap = {health:'id-health',guest:'id-guest',staff:'id-staff',npo:'id-npo'};
-  const idMap  = {health:'健管師',guest:'受邀來賓',staff:'行政/工作人員',npo:'社區據點/NPO協會'};
-  const regsHtml = (ev.registrations||[]).length>0
-    ? `<table class="reg-table">
-        <thead><tr><th>姓名</th><th>身分</th><th>邀請人</th><th>時間</th></tr></thead>
-        <tbody>${(ev.registrations||[]).map(r=>`
-          <tr>
-            <td style="font-weight:500">${escHtml(r.name||'')}</td>
-            <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity||''}</span></td>
-            <td style="color:var(--ink-soft)">${escHtml(r.inviter||'')}</td>
-            <td style="color:var(--ink-muted)">${r.loginTime||''}</td>
-          </tr>`).join('')}
-        </tbody></table>`
-    : '<p style="font-size:13px;color:var(--ink-muted);padding:12px 0">尚無報名紀錄</p>';
-
-  const isActive = ev.active==='上架';
-  return `
-    <div class="dm-upload-area">
-      <div class="dm-preview" id="dmPrev-${ev.id}">
-        ${ev.dmUrl?`<img src="${ev.dmUrl}" alt="DM">`:'<span style="padding:6px;font-size:11px">尚未上傳 DM</span>'}
-      </div>
-      <div class="dm-upload-controls">
-        <p style="font-size:13px;font-weight:500;margin-bottom:2px">活動 DM（直式圖片）</p>
-        <p class="upload-hint">建議比例 2:3，JPG / PNG</p>
-        <input type="file" id="fileInput-${ev.id}" accept="image/*" onchange="uploadDM('${ev.id}',this)">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-sm" onclick="document.getElementById('fileInput-${ev.id}').click()">
-            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            上傳 DM
-          </button>
-          ${ev.dmUrl?`<button class="btn btn-sm btn-danger" onclick="removeDM('${ev.id}')">移除圖片</button>`:''}
-        </div>
-        <span class="upload-progress" id="uploadProg-${ev.id}">上傳中…</span>
-      </div>
-    </div>
-    <div class="field"><label>活動名稱</label><input type="text" id="editTitle-${ev.id}" value="${escHtml(ev.title||'')}"></div>
-    <div class="field-row">
-      <div class="field"><label>活動日期</label><input type="date" id="editDate-${ev.id}" value="${cleanDate(ev.date)}"></div>
-      <div class="field"><label>活動時間</label><input type="time" id="editTime-${ev.id}" value="${cleanTime(ev.time)}"></div>
-    </div>
-    <div class="field"><label>Zoom 連結</label><input type="text" id="editZoom-${ev.id}" value="${escHtml(ev.zoomLink||'')}"></div>
-    <div class="field"><label>活動介紹</label><textarea id="editDesc-${ev.id}">${escHtml(ev.description||'')}</textarea></div>
-    <div style="font-size:13px;font-weight:500;margin-bottom:8px;margin-top:4px">報名名單（${(ev.registrations||[]).length} 人）</div>
-    ${regsHtml}
-    <div class="event-actions">
-      <button class="btn btn-sm ${isActive?'btn-danger':''}" onclick="toggleActive('${ev.id}')">
-        ${isActive?'下架活動':'上架活動'}
-      </button>
-      <button class="btn btn-sm btn-primary" onclick="saveEvent('${ev.id}')">儲存變更</button>
-    </div>`;
-}
-
-function toggleEvent(id) {
-  openEventId = openEventId===id ? null : id;
-  renderEvents();
-}
-
-// ── 儲存變更 ──
-async function saveEvent(id) {
-  const ev = cachedEvents.find(e=>e.id===id);
-  if (!ev) return;
-  ev.title       = document.getElementById(`editTitle-${id}`).value;
-  ev.date        = document.getElementById(`editDate-${id}`).value;
-  ev.time        = document.getElementById(`editTime-${id}`).value;
-  ev.zoomLink    = document.getElementById(`editZoom-${id}`).value;
-  ev.description = document.getElementById(`editDesc-${id}`).value;
-
-  await sheetsPost({
-    sheet:'活動列表', eventId:id,
-    title:ev.title, date:ev.date, time:ev.time,
-    zoomLink:ev.zoomLink, description:ev.description,
-    dmUrl:ev.dmUrl||'', active:ev.active,
-    updatedAt:new Date().toLocaleString('zh-TW')
-  });
-
-  openEventId = id;
-  renderEvents();
-  showToast('✓ 已儲存');
-}
-
-// ── 上架 / 下架 ──
-async function toggleActive(id) {
-  const ev = cachedEvents.find(e=>e.id===id);
-  if (!ev) return;
-  ev.active = ev.active==='上架'?'下架':'上架';
-
-  await sheetsPost({
-    sheet:'活動列表', eventId:id,
-    title:ev.title, date:ev.date, time:ev.time,
-    zoomLink:ev.zoomLink, description:ev.description,
-    dmUrl:ev.dmUrl||'', active:ev.active,
-    updatedAt:new Date().toLocaleString('zh-TW')
-  });
-
-  openEventId = id;
-  renderEvents();
-  showToast(ev.active==='上架'?'✓ 已上架':'✓ 已下架');
-}
-
-// ── 新增活動 ──
-function openNewModal() {
-  document.getElementById('newModal').style.display='flex';
-  const d = new Date();
-  const daysUntilTue = (2-d.getDay()+7)%7||7;
-  d.setDate(d.getDate()+daysUntilTue);
-  document.getElementById('newDate').value = d.toISOString().split('T')[0];
-  document.getElementById('newTime').value = '19:00';
-  setTimeout(()=>document.getElementById('newTitle').focus(),50);
-}
-
-function closeNewModal() { document.getElementById('newModal').style.display='none'; }
-
-async function createNewEvent() {
-  const title = document.getElementById('newTitle').value.trim();
-  if (!title) {
-    document.getElementById('newTitle').style.borderColor='var(--danger)';
-    document.getElementById('newTitle').focus();
-    return;
-  }
-  const date = document.getElementById('newDate').value;
-  const time = document.getElementById('newTime').value;
-  const zoom = document.getElementById('newZoom').value.trim();
-  const desc = document.getElementById('newDesc').value.trim();
-  const newId = String(Date.now());
-
-  const btn = document.getElementById('createBtn');
-  btn.disabled=true; btn.textContent='建立中…';
-
-  await sheetsPost({
-    sheet:'活動列表', eventId:newId,
-    title, date, time, zoomLink:zoom, description:desc,
-    dmUrl:'', active:'上架',
-    createdAt:new Date().toLocaleString('zh-TW')
-  });
-
-  btn.disabled=false; btn.textContent='建立活動';
-  closeNewModal();
-  ['newTitle','newDate','newTime','newZoom','newDesc'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.value=''; el.style.borderColor='';
-  });
-
-  showToast('✓ 活動已建立，重新載入中…');
-  await loadEvents();
-  openEventId = newId;
-  renderEvents();
-}
-
-// ── DM 上傳 ──
-async function uploadDM(id, input) {
-  const file = input.files[0];
-  const cloudName = localStorage.getItem('cloudName');
-  const preset    = localStorage.getItem('uploadPreset');
-  if (!cloudName||!preset) { alert('請先至「系統設定」填寫 Cloudinary 設定後再上傳。'); return; }
-
-  const prog = document.getElementById(`uploadProg-${id}`);
-  prog.style.display='inline';
-  try {
-    const fd = new FormData();
-    fd.append('file',file); fd.append('upload_preset',preset);
-    const res  = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,{method:'POST',body:fd});
-    const data = await res.json();
-    if (data.secure_url) {
-      const ev = cachedEvents.find(e=>e.id===id);
-      if (ev) ev.dmUrl = data.secure_url;
-      await sheetsPost({
-        sheet:'活動列表', eventId:id,
-        title:ev.title, date:ev.date, time:ev.time,
-        zoomLink:ev.zoomLink, description:ev.description,
-        dmUrl:data.secure_url, active:ev.active,
-        updatedAt:new Date().toLocaleString('zh-TW')
-      });
-      prog.style.display='none';
-      openEventId=id; renderEvents();
-      showToast('✓ DM 已上傳');
-    } else {
-      prog.style.display='none';
-      alert('上傳失敗：'+(data.error?.message||'請確認 Cloudinary 設定'));
-    }
-  } catch(err) {
-    prog.style.display='none';
-    alert('上傳錯誤：'+err.message);
-  }
-}
-
-async function removeDM(id) {
-  const ev = cachedEvents.find(e=>e.id===id);
-  if (!ev) return;
-  ev.dmUrl='';
-  await sheetsPost({
-    sheet:'活動列表', eventId:id,
-    title:ev.title, date:ev.date, time:ev.time,
-    zoomLink:ev.zoomLink, description:ev.description,
-    dmUrl:'', active:ev.active,
-    updatedAt:new Date().toLocaleString('zh-TW')
-  });
-  openEventId=id; renderEvents();
-}
-
-// ── 報名紀錄（從 Sheets 讀） ──
-async function loadRegistrations() {
-  document.getElementById('regContent').innerHTML='<div class="loading-state">載入中…</div>';
-  try {
-    const data = await sheetsGet({ action:'getRegistrations' });
-    if (!data.success) throw new Error(data.error);
-    renderRegistrations(data.registrations||[]);
-  } catch(err) {
-    document.getElementById('regContent').innerHTML=`<div class="empty-state">載入失敗：${err.message}</div>`;
-  }
-}
-
-function renderRegistrations(regs) {
-  const tagMap={health:'id-health',guest:'id-guest',staff:'id-staff',npo:'id-npo'};
-  const idMap={health:'健管師',guest:'受邀來賓',staff:'行政/工作人員',npo:'社區據點/NPO協會'};
-
-  if (regs.length===0) {
-    document.getElementById('regContent').innerHTML='<div class="empty-state">尚無任何報名紀錄</div>';
-    return;
-  }
-
-  // 依「活動名稱＋日期」分組，避免每月重複課名時互相混淆
-  const groups={};
-  regs.forEach(r=>{
-    const groupKey = `${r.eventTitle||'未知活動'}__${r.eventDate||''}`;
-    if (!groups[groupKey]) groups[groupKey]={title:r.eventTitle||'未知活動',date:r.eventDate,time:r.eventTime,regs:[]};
-    groups[groupKey].regs.push(r);
-  });
-
-  // 快取分組後的資料，讓每個活動各自的匯出按鈕能取用
-  window.__regGroups = groups;
-
-  document.getElementById('regContent').innerHTML = Object.entries(groups).map(([groupKey,grp])=>{
-    // ── 同活動同日期內，「姓名＋身分」相同的只顯示一筆，多次出現時累計次數、取最新時間 ──
-    const dedupMap = new Map();
-    grp.regs.forEach(r=>{
-      const key = `${r.name||''}__${r.identity||''}`;
-      if (!dedupMap.has(key)) {
-        dedupMap.set(key, { ...r, count: 1 });
-      } else {
-        const existing = dedupMap.get(key);
-        existing.count += 1;
-        // 保留較新的登入時間、邀請人、Zoom名稱（避免舊資料蓋掉有值的欄位）
-        if (r.loginTime && (!existing.loginTime || r.loginTime > existing.loginTime)) {
-          existing.loginTime = r.loginTime;
-        }
-        if (r.inviter && !existing.inviter) existing.inviter = r.inviter;
-        if (r.zoomName && !existing.zoomName) existing.zoomName = r.zoomName;
-      }
-    });
-    const dedupedRegs = Array.from(dedupMap.values());
-    const safeKey = escHtml(groupKey).replace(/'/g,"\\'");
-
-    return `
-    <div class="event-card" style="margin-bottom:16px">
-      <div class="event-header" id="reg-header-${safeKey}" onclick="toggleRegGroup('${safeKey}')">
-        <span class="event-title-text">${escHtml(grp.title)}</span>
-        <span class="event-meta-text">${grp.date||''} ${grp.time||''}</span>
-        <span class="event-meta-text">${dedupedRegs.length} 人</span>
-        <button class="btn btn-sm" style="margin-left:auto;" onclick="event.stopPropagation();exportEventCSV('${safeKey}')">
-          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          匯出本場 CSV
-        </button>
-      </div>
-      <div class="event-body" id="reg-body-${safeKey}">
-        <table class="reg-table">
-          <thead><tr><th>姓名</th><th>Zoom名稱</th><th>身分</th><th>邀請人</th><th>次數</th><th>時間</th></tr></thead>
-          <tbody>${dedupedRegs.map(r=>`
-            <tr>
-              <td style="font-weight:500">${escHtml(r.name||'')}</td>
-              <td style="color:var(--ink-soft)">${escHtml(r.zoomName||'')}</td>
-              <td><span class="id-tag ${tagMap[r.identity]||''}">${idMap[r.identity]||r.identity||''}</span></td>
-              <td style="color:var(--ink-soft)">${escHtml(r.inviter||'')}</td>
-              <td style="color:var(--ink-muted)">${r.count > 1 ? `×${r.count}` : ''}</td>
-              <td style="color:var(--ink-muted)">${r.loginTime||''}</td>
-            </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function toggleRegGroup(safeKey) {
-  const header = document.getElementById(`reg-header-${safeKey}`);
-  const body   = document.getElementById(`reg-body-${safeKey}`);
-  header.classList.toggle('open');
-  body.classList.toggle('open');
-}
-
-async function exportEventCSV(groupKey) {
-  const groups = window.__regGroups || {};
-  const grp = groups[groupKey];
-  if (!grp) { alert('找不到這場活動的資料'); return; }
-  const eventTitle = grp.title;
-
-  const idMap={health:'健管師',guest:'受邀來賓',staff:'行政/工作人員',npo:'社區據點/NPO協會'};
-
-  // 匯出時同樣套用「姓名＋身分」去重複的邏輯，跟畫面上看到的一致
-  const dedupMap = new Map();
-  grp.regs.forEach(r=>{
-    const key = `${r.name||''}__${r.identity||''}`;
-    if (!dedupMap.has(key)) {
-      dedupMap.set(key, { ...r, count: 1 });
-    } else {
-      const existing = dedupMap.get(key);
-      existing.count += 1;
-      if (r.loginTime && (!existing.loginTime || r.loginTime > existing.loginTime)) {
-        existing.loginTime = r.loginTime;
-      }
-      if (r.inviter && !existing.inviter) existing.inviter = r.inviter;
-      if (r.zoomName && !existing.zoomName) existing.zoomName = r.zoomName;
-    }
-  });
-  const dedupedRegs = Array.from(dedupMap.values());
-
-  const rows = [['活動名稱','日期','時間','姓名','Zoom名稱','身分','邀請人','次數','登入時間']];
-  dedupedRegs.forEach(r=>rows.push([eventTitle, grp.date, grp.time, r.name, r.zoomName, idMap[r.identity]||r.identity, r.inviter, r.count, r.loginTime]));
-
-  const csv  = rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href=url; a.download=`報名紀錄_${eventTitle}.csv`; a.click();
-  URL.revokeObjectURL(url);
-}
-
-function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-// ── 健管師名冊 ──
-let cachedManagers = [];
-
-async function loadManagers() {
-  document.getElementById('managersList').innerHTML = '<div class="loading-state">載入中…</div>';
-  try {
-    const data = await sheetsGet({ action: 'getHealthManagers' });
-    if (!data.success) throw new Error(data.error);
-    cachedManagers = data.managers || [];
-    renderManagers();
-  } catch(err) {
-    document.getElementById('managersList').innerHTML = `<div class="empty-state">載入失敗：${err.message}</div>`;
-  }
-}
-
-function renderManagers() {
-  const container = document.getElementById('managersList');
-  if (cachedManagers.length === 0) {
-    container.innerHTML = '<div class="empty-state">尚無健管師登入紀錄</div>';
-    return;
-  }
-
-  container.innerHTML = cachedManagers.map(m => {
-    const avatarHtml = m.pictureUrl
-      ? `<img class="manager-avatar" src="${m.pictureUrl}" alt="" onerror="this.style.display='none'">`
-      : `<div class="manager-avatar-placeholder"><svg width="20" height="20" fill="#888" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>`;
-    return `<div class="manager-card">
-      ${avatarHtml}
-      <div class="manager-info">
-        <div class="manager-name">${escHtml(m.name)}</div>
-        <div class="manager-meta">出席 ${m.attendCount} 場　首次登入 ${m.firstLogin.substring(0,10)}</div>
-      </div>
-      <button class="view-records-btn" onclick="viewManagerRecords('${m.lineUserId}')">
-        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        紀錄
-      </button>
-      <button class="approve-btn ${m.approved ? 'approved' : 'pending'}" onclick="toggleApprove('${m.lineUserId}', ${m.rowIndex}, ${m.approved})">
-        ${m.approved
-          ? '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> 已核准'
-          : '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 待審核'}
-      </button>
-    </div>`;
-  }).join('');
-}
-
-async function toggleApprove(lineUserId, rowIndex, currentApproved) {
-  const newApproved = !currentApproved;
-  await sheetsPost({ action: 'approveManager', lineUserId, rowIndex, approved: newApproved });
-  const m = cachedManagers.find(m => m.lineUserId === lineUserId);
-  if (m) m.approved = newApproved;
-  renderManagers();
-  showToast(newApproved ? '✓ 已核准' : '已取消核准');
-}
-
-async function viewManagerRecords(lineUserId) {
-  const m = cachedManagers.find(m => m.lineUserId === lineUserId);
-  if (!m) return;
-
-  document.getElementById('modalName').textContent = m.name;
-  document.getElementById('modalMeta').textContent = `出席 ${m.attendCount} 場`;
-  document.getElementById('modalAvatar').src = m.pictureUrl || '';
-  document.getElementById('modalRecords').innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink-muted)">載入中…</div>';
-  document.getElementById('managerModal').style.display = 'flex';
-
-  try {
-    const data = await sheetsGet({ action: 'getCRMData', lineUserId });
-    const records = (data.records || []).reverse();
-    if (records.length === 0) {
-      document.getElementById('modalRecords').innerHTML = '<p style="font-size:13px;color:var(--ink-muted);padding:12px 0">尚無出席紀錄</p>';
-      return;
-    }
-    document.getElementById('modalRecords').innerHTML = records.map(r => `
-      <div class="modal-rec-row">
-        <span style="font-weight:500;flex:1;">${escHtml(r.eventTitle)}</span>
-        <span style="color:var(--ink-muted);font-size:12px;">${r.eventDate || ''}</span>
-      </div>`).join('');
-  } catch(err) {
-    document.getElementById('modalRecords').innerHTML = '<p style="color:var(--danger);font-size:13px;">載入失敗</p>';
-  }
-}
-
-function closeManagerModal() {
-  document.getElementById('managerModal').style.display = 'none';
-}
-
-function showToast(msg,isErr=false){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='save-toast'+(isErr?' err-toast':'');
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
-}
-
-function showInlineMsg(el,text,color){
-  el.textContent=text; el.style.color=color; el.style.display='inline';
-  setTimeout(()=>el.style.display='none',3000);
-}
+  // auto-redirect after a short delay, in case the visitor doesn't click
+  setTimeout(function () {
+    window.location.href = "https://class-b0b02.web.app/";
+  }, 5000);
 </script>
+
 </body>
 </html>
